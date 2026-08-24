@@ -1034,7 +1034,7 @@
       </div>
     </div>
 
-    <!-- ★ TAB: 乐天榜单黑马雷达 (已优化接口鉴权与错误调试) ★ -->
+    <!-- TAB: 乐天榜单黑马雷达 (已对接 openapi.rakuten.co.jp) -->
     <div id="tab-radar" class="tab-pane">
       <div class="card-panel">
         <div class="card-panel-header">
@@ -1047,28 +1047,25 @@
           </div>
         </div>
 
-        <!-- API Config Drawer -->
         <div id="radar-api-box" style="display:block; background:var(--card-subtle); padding:18px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:20px;">
-          <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">🔑 乐天开发者 API 凭证配置</h4>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">已支持新版 UUID 格式 Application ID 与 Access Key：</p>
+          <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">🔑 乐天开发者 API 凭证配置 (官方 openapi 协议)</h4>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">请分别填入乐天控制台生成的 <b>アプリケーションID</b> 和 <b>アクセスキー</b>：</p>
           <div style="display:grid; grid-template-columns: 1fr 1fr auto; gap:10px; align-items:center;">
-            <input type="text" id="rakuten-app-id" class="form-input" placeholder="アプリケーションID (如 36fd7fcb-...)" style="font-size:13px; padding:8px 12px;">
-            <input type="text" id="rakuten-access-key" class="form-input" placeholder="アクセスキー (如 pk_... 可选)" style="font-size:13px; padding:8px 12px;">
+            <input type="text" id="rakuten-app-id" class="form-input" placeholder="アプリケーションID (36fd7fcb-...)" style="font-size:13px; padding:8px 12px;">
+            <input type="text" id="rakuten-access-key" class="form-input" placeholder="アクセスキー (pk_...)" style="font-size:13px; padding:8px 12px;">
             <button class="btn-action btn-primary" onclick="saveRadarApiKey()" style="white-space:nowrap; height:40px;">保存并测试</button>
           </div>
         </div>
 
-        <!-- Radar Filtering Toolbar -->
         <div class="toolbar-box">
           <div class="toolbar-left">
             <div>
-              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">乐天官方榜单类目:</span>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">榜单类目:</span>
               <select id="radar-genre" class="select-input" onchange="fetchRakutenRanking()">
-                <option value="100227" selected>日用品・文具・办公用品 (100227)</option>
-                <option value="100026">电脑・周边配件・数码 (100026)</option>
-                <option value="100804">家具・收纳・内饰软装 (100804)</option>
-                <option value="551177">生活日常杂货・厨房 (551177)</option>
-                <option value="215783">桌垫办公细分类目 (215783)</option>
+                <option value="100227" selected>日用品・文具・办公 (100227)</option>
+                <option value="100026">电脑・周边配件 (100026)</option>
+                <option value="100804">家具・收纳・内饰 (100804)</option>
+                <option value="551177">生活日常杂货 (551177)</option>
                 <option value="0">全乐天综合大榜 (0)</option>
               </select>
             </div>
@@ -1091,7 +1088,6 @@
           </div>
         </div>
 
-        <!-- Radar Products Display Feed -->
         <div id="radar-container" class="radar-grid"></div>
 
       </div>
@@ -1953,7 +1949,7 @@
       if(tabId === 'radar' && currentRadarProducts.length === 0) fetchRakutenRanking();
     }
 
-    // ★★★ 乐天雷达逻辑 (支持官方大类目与新旧鉴权) ★★★
+    // ★★★ 乐天官方 2026 openapi 实时对接逻辑 ★★★
     function toggleRadarApiConfig() {
       const box = document.getElementById('radar-api-box');
       box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
@@ -1965,7 +1961,7 @@
       userConfig.rakutenAppId = val;
       userConfig.rakutenAccessKey = akey;
       localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
-      alert("✅ 乐天 API 凭证保存成功，即将开始扫描！");
+      alert("✅ 乐天 API 凭证已保存，正在发起官方实时扫描！");
       fetchRakutenRanking();
     }
 
@@ -2032,16 +2028,16 @@
       }
     ];
 
-    function fetchRakutenRanking() {
+    async function fetchRakutenRanking() {
       let genreId = document.getElementById('radar-genre').value;
       const appId = userConfig.rakutenAppId || document.getElementById('rakuten-app-id').value.trim();
       const accessKey = userConfig.rakutenAccessKey || document.getElementById('rakuten-access-key').value.trim();
       const statusText = document.getElementById('radar-status-text');
 
-      statusText.innerText = "雷达扫描抓取中...";
+      statusText.innerText = "雷达扫描中...";
       statusText.style.color = "var(--warning)";
 
-      if (!appId) {
+      if (!appId || !accessKey) {
         setTimeout(() => {
           currentRadarProducts = [...MOCK_RADAR_ITEMS];
           statusText.innerText = "扫描完成 (内置精选雷达模式)";
@@ -2051,23 +2047,22 @@
         return;
       }
 
-      // 如果选了 0 (全榜)，则在 API 中不传 genreId 参数
       let genreParam = (genreId && genreId !== '0') ? `&genreId=${encodeURIComponent(genreId)}` : '';
-      let accessKeyParam = accessKey ? `&accessKey=${encodeURIComponent(accessKey)}` : '';
       
-      const callbackName = 'rakutenRankCallback_' + Date.now();
-      const apiUrl = `https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?applicationId=${encodeURIComponent(appId)}${accessKeyParam}${genreParam}&format=json&formatVersion=2&callback=${callbackName}`;
+      // 乐天 2026 最新官方 openapi 端点 (同时传入 appId 与 accessKey)
+      const targetApi = `https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2&applicationId=${encodeURIComponent(appId)}&accessKey=${encodeURIComponent(accessKey)}${genreParam}`;
 
-      let hasHandled = false;
-
-      window[callbackName] = function(data) {
-        hasHandled = true;
-        delete window[callbackName];
+      try {
+        // 先通过免 CORS 代理发起标准 REST 请求获取实时官方榜单
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetApi)}`;
+        const res = await fetch(proxyUrl);
+        const proxyData = await res.json();
+        const data = JSON.parse(proxyData.contents);
 
         if (data.error) {
-          statusText.innerText = `官方报错: ${data.error_description || data.error}`;
+          statusText.innerText = `官方提示: ${data.error_description || data.error}`;
           statusText.style.color = "var(--danger)";
-          alert(`⚠️ 乐天接口返回错误: ${data.error_description || data.error}\n提示：请优先选择「100227 文具办公」大类目。`);
+          alert(`⚠️ 乐天接口鉴权提示: ${data.error_description || data.error}\n请核对填入的 Application ID 与 Access Key 是否来自同一个应用。`);
           currentRadarProducts = [...MOCK_RADAR_ITEMS];
           applyRadarFilter();
           return;
@@ -2084,27 +2079,21 @@
             url: item.itemUrl,
             imageUrl: item.mediumImageUrls && item.mediumImageUrls.length > 0 ? item.mediumImageUrls[0] : ''
           }));
-          statusText.innerText = `✅ 实时直连抓取成功 (${currentRadarProducts.length} 款前台商品)`;
+          statusText.innerText = `✅ 实时直连官方成功 (${currentRadarProducts.length} 款前台爆品)`;
           statusText.style.color = "var(--success)";
         } else {
           currentRadarProducts = [...MOCK_RADAR_ITEMS];
-          statusText.innerText = "该类目暂无榜单数据，已展示精选雷达";
+          statusText.innerText = "该类目暂无榜单，已展示精选雷达";
           statusText.style.color = "var(--warning)";
         }
         applyRadarFilter();
-      };
-
-      const script = document.createElement('script');
-      script.src = apiUrl;
-      script.onerror = function() {
-        if (!hasHandled) {
-          statusText.innerText = "连接失败，已回退至离线雷达";
-          statusText.style.color = "var(--danger)";
-          currentRadarProducts = [...MOCK_RADAR_ITEMS];
-          applyRadarFilter();
-        }
-      };
-      document.body.appendChild(script);
+      } catch (err) {
+        console.error("Fetch ranking error:", err);
+        statusText.innerText = "直连受限，已切换为精选雷达";
+        statusText.style.color = "var(--warning)";
+        currentRadarProducts = [...MOCK_RADAR_ITEMS];
+        applyRadarFilter();
+      }
     }
 
     function applyRadarFilter() {
