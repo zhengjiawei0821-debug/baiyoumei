@@ -1932,7 +1932,7 @@
       let genreId = document.getElementById('radar-genre').value;
       const statusText = document.getElementById('radar-status-text');
 
-      statusText.innerText = "正在直连日本乐天前台抓取中...";
+      statusText.innerText = "正在直连乐天前台抓取中...";
       statusText.style.color = "var(--warning)";
 
       try {
@@ -1950,16 +1950,13 @@
             url: item.itemUrl || 'https://ranking.rakuten.co.jp/',
             imageUrl: item.mediumImageUrls && item.mediumImageUrls.length > 0 ? item.mediumImageUrls[0] : ''
           }));
-          statusText.innerText = `✅ 实时直连前台成功 (${currentRadarProducts.length} 款当前最新商品)`;
+          statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款当前最新榜单)`;
           statusText.style.color = "var(--success)";
-        } else {
-          statusText.innerText = "未获取到数据";
-          statusText.style.color = "var(--warning)";
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        statusText.innerText = "网络异常";
-        statusText.style.color = "var(--danger)";
+        statusText.innerText = "网络异常，已保持就绪";
+        statusText.style.color = "var(--warning)";
       }
       applyRadarFilter();
     }
