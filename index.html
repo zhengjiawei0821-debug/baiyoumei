@@ -1,0 +1,3271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本乐天专线物流与智能报价系统 | Pro Express Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      
+      --bg: #f1f5f9;
+      --surface: #111827;
+      --card-bg: #ffffff;
+      --card-subtle: #f8fafc;
+      --border-color: #e2e8f0;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      
+      --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 12px 30px -4px rgba(79, 70, 229, 0.15);
+      --shadow-glow: 0 0 25px rgba(79, 70, 229, 0.35);
+    }
+
+    body.dark-theme {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-subtle: #0b1221;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      
+      --primary-light: rgba(79, 70, 229, 0.15);
+      --success-light: rgba(16, 185, 129, 0.15);
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --danger-light: rgba(239, 68, 68, 0.15);
+      
+      background-color: var(--bg);
+      color: var(--text-main);
+    }
+    
+    body.dark-theme .form-input, body.dark-theme .select-input, body.dark-theme .seo-textarea {
+      background: #0f172a; color: #f8fafc; border-color: #334155;
+    }
+    body.dark-theme .form-input:focus, body.dark-theme .select-input:focus, body.dark-theme .seo-textarea:focus {
+      background: #1e293b; border-color: var(--primary);
+    }
+    body.dark-theme .chip-btn {
+      background: #0f172a; color: #cbd5e1; border-color: #334155;
+    }
+    body.dark-theme .chip-btn:hover {
+      background: #312e81; color: #818cf8; border-color: #4f46e5;
+    }
+    body.dark-theme .segmented-control { background: #0f172a; }
+    body.dark-theme .segmented-control label { color: #94a3b8; }
+    body.dark-theme .segmented-control input[type="radio"]:checked + label {
+      background: #1e293b; color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    body.dark-theme .data-table { background: transparent; }
+    body.dark-theme .data-table th { background: #0b1221; border-color: #334155; color: #cbd5e1; }
+    body.dark-theme .data-table td { border-color: #334155; }
+    body.dark-theme .data-table tr:hover { background: #1e293b; }
+    body.dark-theme .data-table input { background: #0f172a; color: #f8fafc; border-color: #334155; }
+    body.dark-theme .details-grid, body.dark-theme .company-tag { background: #0f172a; color: #cbd5e1; }
+    body.dark-theme .nav-tab-item { background: rgba(30, 41, 59, 0.6); color: #94a3b8; border: 1px solid #334155; }
+    body.dark-theme .nav-tab-item:hover { background: #0f172a; color: var(--primary); }
+    body.dark-theme .nav-tab-item.active { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: #fff; border:none; }
+    body.dark-theme .navigation-bar { background: rgba(15, 23, 42, 0.85); border: 1px solid #334155; }
+    body.dark-theme .btn-ghost { background: #334155; color: #f8fafc; }
+    body.dark-theme .btn-ghost:hover { background: #475569; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 80px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .hero-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: white;
+      padding: 36px 0 60px 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+    }
+
+    .hero-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 13px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .app-wrapper {
+      max-width: 1400px;
+      margin: -36px auto 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .navigation-bar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius-lg);
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      transition: all 0.3s;
+    }
+
+    .nav-tab-item {
+      flex: 1;
+      min-width: 120px;
+      padding: 14px 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav-tab-item:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .nav-tab-item.active {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1080px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      padding: 28px;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+
+    .card-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-panel-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      opacity: 0.85;
+    }
+
+    .input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--card-subtle);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-input:focus {
+      background: var(--card-bg);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+    }
+
+    .input-unit {
+      position: absolute;
+      right: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-light);
+      pointer-events: none;
+    }
+
+    .dim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .chip-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .chip-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: var(--card-subtle);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .segmented-control {
+      display: flex;
+      background: var(--card-subtle);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      gap: 4px;
+    }
+
+    .segmented-control input[type="radio"] {
+      display: none;
+    }
+
+    .segmented-control label {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .segmented-control input[type="radio"]:checked + label {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .bento-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .bento-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #cbd5e1;
+    }
+
+    .bento-card.accent-purple::before { background: linear-gradient(90deg, #6366f1, #a855f7); }
+    .bento-card.accent-blue::before { background: linear-gradient(90deg, #06b6d4, #3b82f6); }
+    .bento-card.accent-green::before { background: linear-gradient(90deg, #10b981, #059669); }
+
+    .bento-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bento-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .bento-value small {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .toolbar-box {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .select-input {
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: var(--card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .btn-action {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-ghost {
+      background: var(--card-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-ghost:hover {
+      background: var(--border-color);
+    }
+
+    .channel-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .express-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      position: relative;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .express-card:hover {
+      border-color: #c7d2fe;
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .express-card.winner {
+      border: 2px solid #10b981;
+      background: linear-gradient(180deg, var(--card-bg) 0%, var(--success-light) 100%);
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15);
+    }
+
+    .express-card.disabled {
+      opacity: 0.6;
+      background: var(--card-subtle);
+      border-style: dashed;
+    }
+
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .company-tag {
+      background: var(--card-subtle);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .channel-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-green { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
+    .pill-blue { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); }
+    .pill-amber { background: var(--warning-light); color: var(--warning); border: 1px solid var(--warning); }
+    .pill-purple { background: rgba(168,85,247,0.15); color: #c084fc; border: 1px solid #c084fc; }
+
+    .price-container {
+      text-align: right;
+    }
+
+    .price-tag-big {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .price-tag-big.winner-price {
+      color: var(--success);
+    }
+
+    .price-jpy-tag {
+      font-size: 13px;
+      font-weight: 700;
+      color: #6366f1;
+      margin-top: 4px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      background: var(--card-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+
+    .details-item span {
+      color: var(--text-light);
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .details-item strong {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .rule-note-bar {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .drawer-toggle {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .math-drawer {
+      display: none;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      margin-top: 14px;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--card-bg);
+    }
+
+    .data-table th {
+      background: var(--card-subtle);
+      padding: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--card-subtle);
+    }
+
+    .data-table input {
+      padding: 6px 10px;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      width: 80px;
+      background: var(--card-subtle);
+      color: var(--text-main);
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .config-card {
+      background: var(--card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .config-card h3 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 14px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .savings-alert {
+      background: var(--danger-light);
+      border-left: 4px solid var(--danger);
+      padding: 14px 18px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--danger);
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .savings-alert.active {
+      display: block;
+    }
+    
+    .savings-alert p {
+      margin-bottom: 6px;
+    }
+    .savings-alert p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .seo-textarea {
+      width: 100%;
+      height: 120px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--card-subtle);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      resize: vertical;
+      margin-top: 10px;
+    }
+
+    /* ★ 乐天雷达专属卡片网格样式 ★ */
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .radar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .radar-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: #818cf8;
+    }
+
+    .radar-rank-badge {
+      position: absolute;
+      top: -10px;
+      left: 16px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    }
+
+    .radar-rank-badge.top3 {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Header -->
+  <header class="hero-header">
+    <div class="header-content">
+      <div class="brand-title">
+        <div class="brand-icon">✈️</div>
+        <div class="brand-text">
+          <h1>日本跨境物流智能报价与乐天运营中枢</h1>
+          <p>物流成本核算 | 极限省钱提示 | 乐天榜单黑马雷达 | 直发与海外仓对撞</p>
+        </div>
+      </div>
+      
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div class="status-badge">
+          <div class="pulse-dot"></div>
+          <span id="fx-status-display">汇率: 100 JPY = 4.20 RMB</span>
+        </div>
+        <button id="theme-btn" onclick="toggleTheme()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: 0.3s;" title="切换护眼模式">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Main Content Container -->
+  <div class="app-wrapper">
+
+    <!-- Navigation Bar Tabs -->
+    <nav class="navigation-bar">
+      <button class="nav-tab-item active" onclick="switchTab('calc')">
+        <span>⚡ 单件运费测算</span>
+      </button>
+      <button class="nav-tab-item" onclick="switchTab('deskmat')">
+        <span>📐 桌垫定价核算</span>
+      </button>
+      
+      <!-- ★ 新增：乐天榜单黑马雷达 Tab ★ -->
+      <button class="nav-tab-item" onclick="switchTab('radar')" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #e11d48; border: 1px solid #fecdd3;">
+        <span>🔥 榜单黑马雷达</span>
+      </button>
+
+      <button class="nav-tab-item" onclick="switchTab('rakuten')" style="background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border: 1px solid #99f6e4;">
+        <span>📈 乐天精细化运营</span>
+      </button>
+
+      <button class="nav-tab-item" onclick="switchTab('batch')">
+        <span>📦 批量发货预算</span>
+      </button>
+      <button class="nav-tab-item" onclick="switchTab('config')">
+        <span>⚙️ 汇率、成本与包材配置</span>
+      </button>
+      <button class="nav-tab-item" onclick="switchTab('tariff')">
+        <span>📋 渠道资费表</span>
+      </button>
+      <button class="nav-tab-item" onclick="switchTab('data')">
+        <span>👨‍💻 渠道数据编辑</span>
+      </button>
+    </nav>
+
+    <!-- TAB 1: Single Calculator Panel -->
+    <div id="tab-calc" class="tab-pane active">
+      <div class="grid-layout">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title"><span>⚙️ 包裹属性设定</span></div>
+            <button class="btn-action btn-ghost" style="padding: 4px 10px; font-size: 12px;" onclick="resetInputs()">重置</button>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>数据源版本</span></div>
+            <select id="dataset-version" class="select-input" style="width: 100%;" onchange="calculate()">
+              <option value="s2" selected>最新资费 (OCS 规则已更新)</option>
+              <option value="s1">历史资费 (2026-08-03 更新)</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>包裹实重 (Gross Weight)</span></div>
+            <div class="input-box">
+              <input type="number" id="inp-weight" class="form-input" value="1.5" step="0.1" min="0.01" oninput="calculate()">
+              <span class="input-unit">KG</span>
+            </div>
+            <div class="chip-buttons">
+              <button class="chip-btn" onclick="setWeight(0.2)">0.2kg</button>
+              <button class="chip-btn" onclick="setWeight(0.5)">0.5kg</button>
+              <button class="chip-btn" onclick="setWeight(1.0)">1.0kg</button>
+              <button class="chip-btn" onclick="setWeight(2.0)">2.0kg</button>
+              <button class="chip-btn" onclick="setWeight(5.0)">5.0kg</button>
+              <button class="chip-btn" onclick="setWeight(15.0)">15.0kg</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>箱规尺寸 (长 × 宽 × 高) - <a href="#" onclick="switchTab('config')" style="color:var(--primary);text-decoration:none;font-size:12px;">管理我的包材库</a></span></div>
+            <div class="dim-grid">
+              <div class="input-box">
+                <input type="number" id="inp-len" class="form-input" value="30" placeholder="长" step="0.1" oninput="calculate()">
+                <span class="input-unit">CM</span>
+              </div>
+              <div class="input-box">
+                <input type="number" id="inp-wid" class="form-input" value="20" placeholder="宽" step="0.1" oninput="calculate()">
+                <span class="input-unit">CM</span>
+              </div>
+              <div class="input-box">
+                <input type="number" id="inp-hei" class="form-input" value="10" placeholder="高" step="0.1" oninput="calculate()">
+                <span class="input-unit">CM</span>
+              </div>
+            </div>
+            <div class="chip-buttons" id="dynamic-pkg-chips"></div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>派送目的地</span></div>
+            <div class="segmented-control">
+              <input type="radio" id="dest-main" name="dest" value="其它" checked onchange="calculate()">
+              <label for="dest-main">本州/关东/关西</label>
+
+              <input type="radio" id="dest-hok" name="dest" value="北海道" onchange="calculate()">
+              <label for="dest-hok">北海道</label>
+
+              <input type="radio" id="dest-oki" name="dest" value="冲绳" onchange="calculate()">
+              <label for="dest-oki">冲绳</label>
+
+              <input type="radio" id="dest-isl" name="dest" value="离岛" onchange="calculate()">
+              <label for="dest-isl">离岛</label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>货物属性</span></div>
+            <div class="segmented-control">
+              <input type="radio" id="bat-no" name="battery" value="no" checked onchange="calculate()">
+              <label for="bat-no">普通货物</label>
+
+              <input type="radio" id="bat-yes" name="battery" value="yes" onchange="calculate()">
+              <label for="bat-yes">带电/带液体</label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label"><span>地址类型</span></div>
+            <div class="segmented-control">
+              <input type="radio" id="addr-comp" name="addr" value="company" checked onchange="calculate()">
+              <label for="addr-comp">商业/公司地址</label>
+
+              <input type="radio" id="addr-pers" name="addr" value="personal" onchange="calculate()">
+              <label for="addr-pers">私人住宅地址</label>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+          <div class="bento-metrics">
+            <div class="bento-card accent-purple">
+              <div class="bento-label">包裹实重</div>
+              <div class="bento-value" id="res-actual-w">1.50 <small>KG</small></div>
+            </div>
+            <div class="bento-card accent-blue">
+              <div class="bento-label">体积重 (1/6000)</div>
+              <div class="bento-value" id="res-vol-w">1.00 <small>KG</small></div>
+            </div>
+            <div class="bento-card accent-purple">
+              <div class="bento-label">三边和 / 最大单边</div>
+              <div class="bento-value" id="res-perim">60 <small>CM</small></div>
+            </div>
+            <div class="bento-card accent-green">
+              <div class="bento-label">🏆 最低估算运费</div>
+              <div class="bento-value" id="res-min-price" style="color:var(--success);">￥0.00</div>
+            </div>
+          </div>
+
+          <div id="savings-alert-calc" class="savings-alert"></div>
+
+          <div class="toolbar-box">
+            <div class="toolbar-left">
+              <select id="filter-company" class="select-input" onchange="renderChannels()">
+                <option value="all">所有公司 (OCS, 佐川, 顺丰等)</option>
+                <option value="OCS">OCS</option>
+                <option value="黑猫">黑猫</option>
+                <option value="义达">义达</option>
+                <option value="盛欣">盛欣</option>
+                <option value="中外运">中外运</option>
+                <option value="盘古">盘古</option>
+                <option value="林道">林道</option>
+                <option value="华安">华安</option>
+              </select>
+
+              <select id="filter-active" class="select-input" onchange="renderChannels()">
+                <option value="active_only" selected>仅正常可发渠道</option>
+                <option value="all">显示全部渠道 (含不可发/下架)</option>
+              </select>
+
+              <input type="text" id="filter-search" class="form-input" style="width: 160px; padding: 8px 12px; font-size: 13px;" placeholder="搜索渠道..." oninput="renderChannels()">
+            </div>
+
+            <button class="btn-action btn-primary" onclick="exportCalculationCSV()">
+              <span>📥 导出比价结果 CSV</span>
+            </button>
+          </div>
+
+          <div id="channels-container" class="channel-feed"></div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ★ TAB: 乐天榜单黑马雷达 (NEW FEATURE) ★ -->
+    <div id="tab-radar" class="tab-pane">
+      <div class="card-panel">
+        <div class="card-panel-header">
+          <div class="card-panel-title">
+            <span>🔥 乐天实时排行榜 & 黑马爆品雷达</span>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-action btn-ghost" onclick="toggleRadarApiConfig()">⚙️ API 密钥设置</button>
+            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">🔄 立即扫描刷新榜单</button>
+          </div>
+        </div>
+
+        <!-- API Config Drawer -->
+        <div id="radar-api-box" style="display:none; background:var(--card-subtle); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:20px;">
+          <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">🔑 乐天开发者 API 设置 (可选)</h4>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">输入您的 Rakuten Application ID 即可实时直连抓取官方最新榜单（不填则启用内置精选爆品库雷达模式）：</p>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <input type="text" id="rakuten-app-id" class="form-input" placeholder="输入 Rakuten Application ID (例如: 1029384756102938475)" style="font-size:13px; padding:8px 12px;">
+            <button class="btn-action btn-primary" onclick="saveRadarApiKey()" style="white-space:nowrap;">保存 ID</button>
+          </div>
+        </div>
+
+        <!-- Radar Filtering Toolbar -->
+        <div class="toolbar-box">
+          <div class="toolbar-left">
+            <div>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">扫描类目:</span>
+              <select id="radar-genre" class="select-input" onchange="fetchRakutenRanking()">
+                <option value="215783" selected>办公/桌垫/文具 (Deskmat/Office)</option>
+                <option value="100026">电脑数码配件 (PC Accessories)</option>
+                <option value="215780">生活日用百货 (Daily Goods)</option>
+                <option value="100371">家居收纳装饰 (Interior/Storage)</option>
+                <option value="0">全乐天综合大榜 (All Top)</option>
+              </select>
+            </div>
+
+            <div>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">黑马筛选器:</span>
+              <select id="radar-filter-type" class="select-input" onchange="applyRadarFilter()">
+                <option value="all">显示全榜单商品 (Top 30)</option>
+                <option value="dark_horse" selected>⚡ 仅看「爆发黑马」(榜单Top且评论≤50)</option>
+                <option value="low_reviews">💬 仅看「新晋起量款」(评论≤100)</option>
+                <option value="high_rated">⭐ 仅看「高口碑爆品」(评分≥4.5)</option>
+              </select>
+            </div>
+
+            <input type="text" id="radar-keyword" class="form-input" style="width: 140px; padding: 8px 12px; font-size: 13px;" placeholder="标题关键词..." oninput="applyRadarFilter()">
+          </div>
+
+          <div style="font-size:13px; color:var(--text-muted);">
+            雷达状态: <strong id="radar-status-text" style="color:var(--success);">已就绪</strong>
+          </div>
+        </div>
+
+        <!-- Radar Products Display Feed -->
+        <div id="radar-container" class="radar-grid">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- TAB 2: Desk Mat Pricing Calculator -->
+    <div id="tab-deskmat" class="tab-pane">
+      <div class="grid-layout">
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div class="card-panel-title"><span>📐 桌垫全动态定价核算</span></div>
+          </div>
+
+          <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--primary);">1. 桌垫发货规格设定</h3>
+          <div class="dim-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 15px;">
+            <div class="input-box">
+              <input type="number" id="dm-len" class="form-input" value="80" placeholder="长(cm)" oninput="updatePackDims(); calcDeskMat(); saveAllDeskMatConfig();">
+              <span class="input-unit">CM</span>
+            </div>
+            <div class="input-box">
+              <input type="number" id="dm-wid" class="form-input" value="40" placeholder="宽(cm)" oninput="updatePackDims(); calcDeskMat(); saveAllDeskMatConfig();">
+              <span class="input-unit">CM</span>
+            </div>
+          </div>
+          
+           <div class="field-group">
+            <div class="field-label"><span>发货包装尺寸预估 - <a href="#" onclick="switchTab('config')" style="color:var(--primary);text-decoration:none;font-size:12px;">使用我的包材库</a></span></div>
+            <div class="dim-grid">
+              <div class="input-box">
+                <input type="number" id="dm-pack-l" class="form-input" value="40" placeholder="包装长" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">CM</span>
+              </div>
+              <div class="input-box">
+                <input type="number" id="dm-pack-w" class="form-input" value="13" placeholder="包装宽" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">CM</span>
+              </div>
+              <div class="input-box">
+                <input type="number" id="dm-pack-h" class="form-input" value="13" placeholder="包装高" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">CM</span>
+              </div>
+            </div>
+            <div class="chip-buttons" id="dm-pkg-chips" style="margin-top: 10px;"></div>
+          </div>
+
+          <hr style="border:none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+          <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--primary);">2. 测算环境与财务利润目标</h3>
+          <div class="dim-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 15px;">
+             <div class="field-group" style="margin-bottom:0;">
+               <div class="field-label"><span>测算目的地</span></div>
+               <select id="dm-dest" class="select-input" style="width:100%; height:45px;" onchange="calcDeskMat(); saveAllDeskMatConfig();">
+                 <option value="其它" selected>本州/关东/关西</option>
+                 <option value="北海道">北海道</option>
+                 <option value="冲绳">冲绳</option>
+                 <option value="离岛">离岛</option>
+               </select>
+             </div>
+             <div class="field-group" style="margin-bottom:0;">
+               <div class="field-label"><span>测算地址类型</span></div>
+               <select id="dm-addr" class="select-input" style="width:100%; height:45px;" onchange="calcDeskMat(); saveAllDeskMatConfig();">
+                 <option value="company" selected>商业/公司地址</option>
+                 <option value="personal">私人住宅地址</option>
+               </select>
+             </div>
+          </div>
+
+          <div class="dim-grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="field-group">
+              <div class="field-label"><span>独立日元汇率</span></div>
+              <div class="input-box">
+                <input type="number" id="dm-rate" class="form-input" value="0.042" step="0.001" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>员工人工 (%)</span></div>
+              <div class="input-box">
+                <input type="number" id="dm-wages" class="form-input" value="5" step="1" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>佣金抽成 (%)</span></div>
+              <div class="input-box">
+                <input type="number" id="dm-comm" class="form-input" value="35" step="1" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>日常广告费 (%)</span></div>
+              <div class="input-box">
+                <input type="number" id="dm-ads" class="form-input" value="3" step="1" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+            <div class="field-group" style="grid-column: span 2;">
+              <div class="field-label"><span>基准目标纯利 (%)</span></div>
+              <div class="input-box">
+                <input type="number" id="dm-margin" class="form-input" value="23" step="1" style="border-color: var(--success); background: var(--success-light);" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border:none; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+          <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--text-muted);">3. 基础材料与附加参数设定 (高级修改)</h3>
+          
+          <div class="dim-grid" style="grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px;">
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">1.0mm价/m²</div><input type="number" id="dm-c-10" class="form-input" value="26.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">1.5mm价/m²</div><input type="number" id="dm-c-15" class="form-input" value="36.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">2.0mm价/m²</div><input type="number" id="dm-c-20" class="form-input" value="48.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">3.0mm价/m²</div><input type="number" id="dm-c-30" class="form-input" value="72.2" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">5.0mm价/m²</div><input type="number" id="dm-c-50" class="form-input" value="161" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+          </div>
+
+          <div class="dim-grid" style="grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 15px;">
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">1.0重量/m²</div><input type="number" id="dm-w-10" class="form-input" value="1.3" step="0.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">1.5重量/m²</div><input type="number" id="dm-w-15" class="form-input" value="2.0" step="0.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">2.0重量/m²</div><input type="number" id="dm-w-20" class="form-input" value="2.65" step="0.05" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">3.0重量/m²</div><input type="number" id="dm-w-30" class="form-input" value="3.92" step="0.01" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+            <div class="field-group" style="margin-bottom:0;"><div class="field-label" style="font-size:11px;">5.0重量/m²</div><input type="number" id="dm-w-50" class="form-input" value="6.5" step="0.1" style="padding:8px;font-size:13px;" oninput="calcDeskMat(); saveAllDeskMatConfig();"></div>
+          </div>
+
+          <div class="dim-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom: 0;">
+             <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label"><span>税率乘区</span></div>
+                <input type="number" id="dm-tax" class="form-input" value="1.06" step="0.01" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+             </div>
+             <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label"><span>加成常数(+元)</span></div>
+                <input type="number" id="dm-fixed-cost" class="form-input" value="1" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+             </div>
+             <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label"><span>额外包装重(+KG)</span></div>
+                <input type="number" id="dm-fixed-w" class="form-input" value="1.0" step="0.1" oninput="calcDeskMat(); saveAllDeskMatConfig();">
+             </div>
+          </div>
+        </div>
+
+        <div>
+           <div id="savings-alert-dm" class="savings-alert"></div>
+
+           <div class="card-panel" style="background: linear-gradient(145deg, #1e1b4b, #0f172a); color: white; border: none; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3); padding: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="font-size: 16px; color: #cbd5e1; font-weight: 800;">
+                  📊 实时动态多厚度定价核算矩阵
+                </div>
+                <div style="font-size: 13px; background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px; color: #38bdf8;">
+                  实际裁剪面积: <strong id="dm-res-area">0.32</strong> m²
+                </div>
+              </div>
+              
+              <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+                  <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.2); color: #94a3b8;">
+                      <th style="padding: 12px 4px;">厚度</th>
+                      <th style="padding: 12px 4px;">总重</th>
+                      <th style="padding: 12px 4px;">桌垫成本</th>
+                      <th style="padding: 12px 4px;">运费最低(前三)</th>
+                      <th style="padding: 12px 4px;">售价<br>(RMB)</th>
+                      <th style="padding: 12px 4px; color: #f59e0b;">纯利润<br>(RMB)</th>
+                      <th style="padding: 12px 4px; color: #10b981;">标价<br>(JPY)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dm-multi-tbody"></tbody>
+                </table>
+              </div>
+
+              <div id="dm-error-msg" style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-size: 13px; font-weight: 700; padding: 12px; border-radius: 8px; margin-top: 15px; display: none;">
+                ❌ 各项扣除比例之和已达到或超过 100%，系统无法计算基准售价，请调低左侧百分比。
+              </div>
+
+           </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- TAB 3: 乐天精细化运营中枢 -->
+    <div id="tab-rakuten" class="tab-pane">
+      <div class="grid-layout">
+        <div>
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div class="card-panel-title"><span>🕵️ 竞品底牌“反向扒除”器</span></div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">输入同行竞品标价与尺寸，系统帮您扒出其“拿货硬成本的极限”。</p>
+            
+            <div class="dim-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">竞品前台标价 (JPY)</div>
+                <input type="number" id="comp-price" class="form-input" value="3980" oninput="calcCompetitor()">
+              </div>
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">乐天及隐性扣点总计 (%)</div>
+                <input type="number" id="comp-fee" class="form-input" value="12" step="1" oninput="calcCompetitor()">
+              </div>
+            </div>
+            
+            <div class="field-group" style="margin-bottom:15px;">
+              <div class="field-label">竞品包裹重量与尺寸估算</div>
+              <div style="display:flex; gap:6px;">
+                <input type="number" id="comp-weight" class="form-input" value="1.5" step="0.1" placeholder="重量kg" oninput="calcCompetitor()">
+                <input type="number" id="comp-l" class="form-input" value="40" placeholder="长cm" oninput="calcCompetitor()">
+                <input type="number" id="comp-w" class="form-input" value="13" placeholder="宽cm" oninput="calcCompetitor()">
+                <input type="number" id="comp-h" class="form-input" value="13" placeholder="高cm" oninput="calcCompetitor()">
+              </div>
+            </div>
+
+            <div style="background: var(--card-subtle); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);" id="comp-result"></div>
+          </div>
+
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div class="card-panel-title"><span>📢 RPP 广告保本 ROAS / 盈亏平衡测算</span></div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">计算单次点击出价 (CPC) 的安全极限，严防烧钱亏损。</p>
+            
+            <div class="dim-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">商品客单价 (JPY)</div>
+                <input type="number" id="rpp-price" class="form-input" value="3980" oninput="calcRPP()">
+              </div>
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">预估转化率 CVR (%)</div>
+                <input type="number" id="rpp-cvr" class="form-input" value="5" step="0.5" oninput="calcRPP()">
+              </div>
+              <div class="field-group" style="margin-bottom:0; grid-column: span 2;">
+                <div class="field-label">该商品的可用纯利润空间 (%)</div>
+                <input type="number" id="rpp-profit-rate" class="form-input" value="20" step="1" oninput="calcRPP()">
+              </div>
+            </div>
+
+            <div style="background: var(--card-subtle); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span style="font-size:13px; font-weight:700;">保本极限 CPC (最高点击出价):</span>
+                <span id="rpp-max-cpc" style="font-size:16px; font-weight:800; color:var(--danger);">39.8 円</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span style="font-size:13px; font-weight:700;">盈亏平衡目标 ROAS:</span>
+                <span id="rpp-roas" style="font-size:16px; font-weight:800; color:var(--primary);">500 %</span>
+              </div>
+              <hr style="border:none; border-top:1px dashed var(--border-color); margin:10px 0;">
+              <div style="font-size:12px; color:var(--text-muted); line-height:1.6;" id="rpp-desc"></div>
+            </div>
+          </div>
+
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div class="card-panel-title"><span>📝 爆款日文高权重标题一键生成器</span></div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">基于乐天搜索引擎偏好，自动拼装标准标题。</p>
+            
+            <div class="dim-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">主关键词</div>
+                <input type="text" id="seo-core" class="form-input" value="デスクマット" style="font-size:13px;padding:8px;" oninput="generateSEOTitle()">
+              </div>
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">尺寸/规格</div>
+                <input type="text" id="seo-size" class="form-input" value="80×40cm" style="font-size:13px;padding:8px;" oninput="generateSEOTitle()">
+              </div>
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">卖点1 (如功能)</div>
+                <input type="text" id="seo-p1" class="form-input" value="防水 撥水" style="font-size:13px;padding:8px;" oninput="generateSEOTitle()">
+              </div>
+              <div class="field-group" style="margin-bottom:0;">
+                <div class="field-label">卖点2 (如材质/场景)</div>
+                <input type="text" id="seo-p2" class="form-input" value="PUレザー 傷防止 オフィス" style="font-size:13px;padding:8px;" oninput="generateSEOTitle()">
+              </div>
+            </div>
+            
+            <textarea id="seo-result" class="seo-textarea" readonly></textarea>
+            <button class="btn-action btn-primary" style="margin-top:10px; width:100%; justify-content:center;" onclick="copySEOTitle()">📋 一键复制标题</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div class="card-panel-title"><span>🚢 跨境直发 vs 乐天本土仓 (RSL) 终极对撞机</span></div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+              测算直发专线与海运头程+RSL 本土派送的临界平衡点。
+            </p>
+            
+            <div class="dim-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px;">单批备货量(件)</div>
+                    <input type="number" id="rsl-qty" class="form-input" value="500" style="padding:8px;font-size:13px;" oninput="calcRSL()">
+                </div>
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px;">单件实重(kg)</div>
+                    <input type="number" id="rsl-wgt" class="form-input" value="1.5" step="0.1" style="padding:8px;font-size:13px;" oninput="calcRSL()">
+                </div>
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px;">单件规格(L×W×H)</div>
+                    <div style="display:flex; gap:2px;">
+                        <input type="number" id="rsl-l" class="form-input" value="40" style="padding:6px;font-size:12px;" placeholder="L" oninput="calcRSL()">
+                        <input type="number" id="rsl-w" class="form-input" value="13" style="padding:6px;font-size:12px;" placeholder="W" oninput="calcRSL()">
+                        <input type="number" id="rsl-h" class="form-input" value="13" style="padding:6px;font-size:12px;" placeholder="H" oninput="calcRSL()">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dim-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px; color:var(--primary);">海运头程单价(￥/kg)</div>
+                    <input type="number" id="rsl-sea-price" class="form-input" value="12" step="0.5" style="padding:8px;font-size:13px;border-color:var(--primary);" oninput="calcRSL()">
+                </div>
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px; color:var(--primary);">清关预估税费(￥/件)</div>
+                    <input type="number" id="rsl-tax" class="form-input" value="3" step="0.5" style="padding:8px;font-size:13px;border-color:var(--primary);" oninput="calcRSL()">
+                </div>
+                <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-label" style="font-size:11px; color:var(--primary);">RSL单件派发费(JPY)</div>
+                    <input type="number" id="rsl-local-fee" class="form-input" value="450" step="10" style="padding:8px;font-size:13px;border-color:var(--primary);" oninput="calcRSL()">
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; background: var(--primary-light); border: 1px solid var(--primary); border-radius: var(--radius-sm); padding: 16px; color: var(--text-main);">
+              <h4 style="font-size:14px; margin-bottom:12px; color:var(--primary); border-bottom:1px dashed var(--primary); padding-bottom:8px;">🌊 总成本对撞结论</h4>
+              <div id="rsl-result" style="font-size:13px; line-height:1.6;"></div>
+            </div>
+          </div>
+
+          <div class="card-panel" style="height: 100%;">
+            <div class="card-panel-header">
+              <div class="card-panel-title"><span>🛒 多件捆绑拼单 (まとめ買い) 利润对撞机</span></div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+              评估双件合包与两次单件发货的底层运费差及折扣空间。
+            </p>
+            
+            <div style="display:flex; gap:20px; flex-wrap:wrap;">
+              <div style="flex:1; min-width:200px; background:var(--card-subtle); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <h4 style="font-size:13px; margin-bottom:12px; color:var(--primary);">单件属性</h4>
+                <div class="field-label" style="font-size:11px;">单件实重(kg)</div>
+                <input type="number" id="bun-w1" class="form-input" value="0.5" step="0.1" style="margin-bottom:10px;padding:8px;font-size:13px;" oninput="calcBundle()">
+                <div class="field-label" style="font-size:11px;">单件包装(L×W×H) cm</div>
+                <div style="display:flex; gap:4px; margin-bottom:10px;">
+                  <input type="number" id="bun-l1" class="form-input" value="40" style="padding:8px;font-size:13px;" oninput="calcBundle()">
+                  <input type="number" id="bun-w1_w" class="form-input" value="10" style="padding:8px;font-size:13px;" oninput="calcBundle()">
+                  <input type="number" id="bun-h1" class="form-input" value="10" style="padding:8px;font-size:13px;" oninput="calcBundle()">
+                </div>
+                <div class="field-label" style="font-size:11px;">单件标价(JPY) / 总硬成本(RMB)</div>
+                <div style="display:flex; gap:4px;">
+                  <input type="number" id="bun-p1" class="form-input" value="2980" style="padding:8px;font-size:13px;" oninput="calcBundle()">
+                  <input type="number" id="bun-c1" class="form-input" value="25" style="padding:8px;font-size:13px;" oninput="calcBundle()">
+                </div>
+              </div>
+
+              <div style="flex:1; min-width:200px; background:var(--warning-light); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--warning);">
+                <h4 style="font-size:13px; margin-bottom:12px; color:var(--warning);">双件合包属性 & 拼单折扣</h4>
+                <div class="field-label" style="font-size:11px;">双件同装实重(kg)</div>
+                <input type="number" id="bun-w2" class="form-input" value="0.9" step="0.1" style="margin-bottom:10px;padding:8px;font-size:13px;border-color:var(--warning);" oninput="calcBundle()">
+                <div class="field-label" style="font-size:11px;">双件同装(L×W×H) cm</div>
+                <div style="display:flex; gap:4px; margin-bottom:10px;">
+                  <input type="number" id="bun-l2" class="form-input" value="40" style="padding:8px;font-size:13px;border-color:var(--warning);" oninput="calcBundle()">
+                  <input type="number" id="bun-w2_w" class="form-input" value="15" style="padding:8px;font-size:13px;border-color:var(--warning);" oninput="calcBundle()">
+                  <input type="number" id="bun-h2" class="form-input" value="10" style="padding:8px;font-size:13px;border-color:var(--warning);" oninput="calcBundle()">
+                </div>
+                <div class="field-label" style="font-size:11px;">促使双件成单的打折力度 (% OFF)</div>
+                <input type="number" id="bun-discount" class="form-input" value="10" style="padding:8px;font-size:13px;border-color:var(--warning);" placeholder="如10代表打9折" oninput="calcBundle()">
+              </div>
+            </div>
+
+            <div style="margin-top: 20px; background: #0f172a; border-radius: var(--radius-md); padding: 20px; color: white;">
+              <h4 style="font-size:14px; margin-bottom:15px; color:#cbd5e1; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">⚖️ 利润对撞分析报告</h4>
+              <div id="bundle-result-area" style="font-size:13px; line-height:1.6;"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Batch Panel -->
+    <div id="tab-batch" class="tab-pane">
+      <div class="card-panel">
+        <div class="card-panel-header">
+          <div class="card-panel-title">
+            <span>📦 批量包裹运费试算器</span>
+          </div>
+          <button class="btn-action btn-primary" onclick="addBatchRow()">+ 添加新包裹</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>包裹说明</th>
+                <th>数量</th>
+                <th>单重(kg)</th>
+                <th>长(cm)</th>
+                <th>宽(cm)</th>
+                <th>高(cm)</th>
+                <th>目的地</th>
+                <th>推荐最低渠道</th>
+                <th>单件运费(RMB/JPY)</th>
+                <th>小计运费(RMB)</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="batch-tbody"></tbody>
+            <tfoot>
+              <tr style="background: var(--card-subtle); font-weight: 800;">
+                <td colspan="2">合计总计</td>
+                <td id="batch-total-qty">0</td>
+                <td colspan="5"></td>
+                <td>预估发货总运费:</td>
+                <td colspan="2" id="batch-total-cost" style="font-size: 18px; color: var(--primary);">￥0.00 (0 円)</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: Currency & Cost Panel -->
+    <div id="tab-config" class="tab-pane">
+      <div class="card-panel">
+        <div class="card-panel-header">
+          <div class="card-panel-title">
+            <span>⚙️ 汇率、运费成本与自定义包材库</span>
+          </div>
+          
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="btn-action btn-ghost" onclick="exportData()" title="将所有配置与数据下载到本地电脑">📤 导出配置备份</button>
+            <label class="btn-action btn-ghost" style="cursor: pointer; margin: 0;" title="从本地电脑上传备份文件恢复数据">
+               📥 导入配置恢复
+               <input type="file" accept=".json" style="display:none;" onchange="importData(event)">
+            </label>
+            <div style="width: 1px; height: 20px; background: var(--border-color); margin: 0 4px;"></div>
+            <button class="btn-action btn-ghost" onclick="resetConfigToDefault()">↺ 恢复系统默认设置</button>
+            <button class="btn-action btn-primary" onclick="saveAndApplyConfig()">💾 保存并应用当前修改</button>
+          </div>
+        </div>
+
+        <div class="config-grid">
+          <div class="config-card">
+            <h3>💴 日元汇率设置</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">设定人民币与日元换算基准：</p>
+            <div class="field-group" style="margin-bottom:0;">
+              <div class="field-label"><span>百日元兑人民币 (100 JPY 兑 RMB)</span></div>
+              <div class="input-box">
+                <input type="number" id="cfg-jpy-rate" class="form-input" value="4.20" step="0.01" min="0.01" oninput="applyConfigLive()">
+                <span class="input-unit">元</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-card">
+            <h3>📈 全局物流成本溢价/利润率 (%)</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">一键对所有渠道运费按百分比整体上调或下调：</p>
+            <div class="field-group" style="margin-bottom:0;">
+              <div class="field-label"><span>成本调价比例 (100% 为原价成本)</span></div>
+              <div class="input-box">
+                <input type="number" id="cfg-global-margin" class="form-input" value="100" step="1" min="1" oninput="applyConfigLive()">
+                <span class="input-unit">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px; margin-bottom: 30px; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; background: var(--card-subtle);">
+          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">🗃️ 我的专属包材库</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">在此添加常用纸箱型号，可在算价界面一键调用。</p>
+          
+          <div style="display: flex; gap: 10px; margin-bottom: 15px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="pkg-name" class="form-input" style="width: 150px; padding: 8px 12px; font-size: 13px;" placeholder="包材名称 (如1号箱)">
+            <input type="number" id="pkg-l" class="form-input" style="width: 80px; padding: 8px; font-size: 13px;" placeholder="长(cm)">
+            <input type="number" id="pkg-w" class="form-input" style="width: 80px; padding: 8px; font-size: 13px;" placeholder="宽(cm)">
+            <input type="number" id="pkg-h" class="form-input" style="width: 80px; padding: 8px; font-size: 13px;" placeholder="高(cm)">
+            <input type="number" id="pkg-weight" class="form-input" style="width: 100px; padding: 8px; font-size: 13px;" step="0.1" placeholder="净重(kg)">
+            <button class="btn-action btn-primary" style="padding: 8px 16px;" onclick="addCustomPackage()">添加包材</button>
+          </div>
+          
+          <div class="chip-buttons" id="config-pkg-list"></div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">🚚 各大专线渠道首重与续重成本细化调整表</h3>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>渠道名称</th>
+                  <th>所属公司</th>
+                  <th>官方首重</th>
+                  <th>自定义首重(元)</th>
+                  <th>官方续重</th>
+                  <th>自定义续重(元)</th>
+                  <th>固定加减 (±元)</th>
+                  <th>渠道折扣 (%)</th>
+                  <th>状态</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody id="config-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 6: Tariff Table Panel -->
+    <div id="tab-tariff" class="tab-pane">
+      <div class="card-panel">
+        <div class="card-panel-header">
+          <div class="card-panel-title">
+            <span>📋 全量渠道资费标准与限重一览 (最新版)</span>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>渠道名称</th>
+                <th>所属公司</th>
+                <th>接单状态</th>
+                <th>带电属性</th>
+                <th>计抛除数</th>
+                <th>首重计费</th>
+                <th>续重阶梯规则</th>
+                <th>限制条件说明</th>
+                <th>偏远地区附加费</th>
+              </tr>
+            </thead>
+            <tbody id="tariff-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: Data Editor Panel -->
+    <div id="tab-data" class="tab-pane">
+      <div class="card-panel">
+        <div class="card-panel-header">
+          <div class="card-panel-title">
+            <span>👨‍💻 渠道底层数据 (JSON) 实时编辑器</span>
+          </div>
+          <div>
+            <button class="btn-action btn-ghost" onclick="resetDataEditor()">↺ 恢复当前生效数据</button>
+            <button class="btn-action btn-primary" onclick="saveDataEditor()">💾 校验并更新底层数据</button>
+          </div>
+        </div>
+        
+        <div style="width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
+          <textarea id="json-editor-area" style="width: 100%; height: 600px; padding: 16px; font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; background: #1e1e1e; color: #d4d4d4; border: none; outline: none; resize: vertical;" spellcheck="false"></textarea>
+        </div>
+        <div id="json-editor-error" style="color: var(--danger); font-size: 13px; font-weight: 700; margin-top: 10px; display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DATA_S1 = {"version": 1, "updated_at": "2026-08-03", "source": "0729最新物流计算器.xlsx", "channels": [{"id": "ocs", "name": "OCS", "company": "OCS", "battery": "no", "active": true, "note": "5.11起", "model": "ocs", "rates": {"free_perimeter": 140, "max_perimeter": 260, "first_weight": 0.5, "volumetric_div": 5000, "tiers": [{"max": 0.5, "base": 32.5, "cont": 0}, {"max": 2, "base": 32.5, "cont": 5}, {"max": 5, "base": 32.5, "cont": 7}, {"max": 10, "base": 33.5, "cont": 7}, {"max": 20, "base": 34.5, "cont": 7}], "heavy_per_kg": 20, "remote": {"type": "ocs", "okinawa_threshold": 1.66, "okinawa_min": 30, "okinawa_per_kg": 18, "hokkaido_threshold": 1.25, "hokkaido_min": 15, "hokkaido_per_kg": 12}}}]};
+    
+    let DATA_S2 = {
+      "version": 2,
+      "source": "OCS最新价格修改版",
+      "updated_at": "2026-08-24 17:00:00",
+      "channels": [
+        {
+          "active": true,
+          "battery": "no",
+          "company": "OCS",
+          "id": "ocs",
+          "model": "ocs",
+          "name": "OCS普货专线",
+          "note": "140免抛; 141-260全抛; 超260加180元",
+          "rates": {
+            "first_weight": 0.5,
+            "free_perimeter": 140,
+            "heavy_per_kg": 20,
+            "max_perimeter": 260,
+            "remote": {
+              "hokkaido_min": 15,
+              "hokkaido_per_kg": 12,
+              "hokkaido_threshold": 1.25,
+              "okinawa_min": 30,
+              "okinawa_per_kg": 18,
+              "okinawa_threshold": 1.66,
+              "type": "ocs"
+            },
+            "tiers": [
+              {"base": 31, "cont": 0, "max": 0.5},
+              {"base": 31, "cont": 5, "max": 2},
+              {"base": 31, "cont": 5, "max": 5},
+              {"base": 32, "cont": 5.5, "max": 10},
+              {"base": 33, "cont": 7, "max": 20}
+            ],
+            "volumetric_div": 5000
+          }
+        },
+        {
+          "active": true,
+          "battery": "yes",
+          "company": "OCS",
+          "id": "ocs_bat",
+          "model": "ocs",
+          "name": "OCS带电专线",
+          "note": "带电38/10; 140免抛; 超260加180元",
+          "rates": {
+            "first_weight": 0.5,
+            "free_perimeter": 140,
+            "max_perimeter": 260,
+            "remote": {
+              "hokkaido_min": 15,
+              "hokkaido_per_kg": 12,
+              "hokkaido_threshold": 1.25,
+              "okinawa_min": 30,
+              "okinawa_per_kg": 18,
+              "okinawa_threshold": 1.66,
+              "type": "ocs"
+            },
+            "tiers": [
+              {"base": 38, "cont": 0, "max": 0.5},
+              {"base": 38, "cont": 10, "max": 20}
+            ],
+            "heavy_per_kg": 20,
+            "volumetric_div": 5000
+          }
+        },
+        {
+          "active": true,
+          "battery": "no",
+          "company": "OCS",
+          "id": "ocs_letter",
+          "model": "letter_05",
+          "name": "OCS投函",
+          "note": "全境无偏远",
+          "rates": {
+            "base": 16,
+            "cont": 3,
+            "first_weight": 0.5,
+            "max_length": 31.2,
+            "max_perimeter": 56.5,
+            "max_thickness": 3,
+            "max_weight": 1,
+            "max_width": 22.8,
+            "remote": {"type": "none"},
+            "volumetric_div": 6000
+          }
+        },
+        {"active": true, "battery": "no", "company": "义达", "id": "yida_sagawa", "model": "half_bubble_tiers", "name": "义达义速宝快捷（佐川）", "note": "", "rates": {"first_weight": 0.5, "flat_first": 31, "free_perimeter": 130, "max_perimeter": 160, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 31, "cont": 5, "max": 5}, {"base": 31, "cont": 5.5, "max": 10}, {"base": 31, "cont": 6, "max": 20}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "义达", "id": "yida_jp", "model": "yida_jp", "name": "义达义速宝快捷（日邮）", "note": "", "rates": {"first_weight": 0.5, "flat_first": 32, "free_perimeter": 100, "max_weight": 20, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 32, "cont": 7, "max": 2}, {"base": 32, "cont": 7.5, "max": 5}, {"base": 33, "cont": 8, "max": 10}, {"base": 33, "cont": 9, "max": 20}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "义达", "id": "yida_mini", "model": "mini_01", "name": "义达mini小包", "note": "厚度≤3cm", "rates": {"base": 19, "cont": 2, "first_weight": 0.1, "max_perimeter": 60, "max_thickness": 3, "max_weight": 1, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
+        {"active": false, "battery": "no", "company": "盛欣", "id": "sx_570", "model": "simple_tiers", "name": "盛欣-佐川(570号段)", "note": "2-3天上网", "rates": {"first_weight": 0.5, "flat_first": 33, "max_perimeter": 160, "max_side": 65, "max_weight": 30, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 33, "cont": 0, "max": 0.5}, {"base": 34, "cont": 4.5, "max": 5}, {"base": 34.5, "cont": 5, "max": 10}, {"base": 35, "cont": 5.5, "max": 20}, {"base": 36, "cont": 6, "max": 30}], "volumetric_div": 6000}},
+        {"active": true, "battery": "yes", "company": "盛欣", "id": "sx_bat", "model": "simple_cont", "name": "盛欣-佐川(电/液/366)（带电）", "note": "4-5天上网", "rates": {"base": 40, "cont": 10, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "盛欣", "id": "sx_366", "model": "half_bubble_tiers", "name": "盛欣-佐川(366号段)", "note": "3-4天上网；冲绳偏远；不接带电", "rates": {"first_weight": 0.5, "flat_first": 35, "free_perimeter": 160, "max_perimeter": 260, "max_weight": 30, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 35, "cont": 0, "max": 0.5}, {"base": 35, "cont": 5, "max": 5}, {"base": 35.5, "cont": 5.5, "max": 10}, {"base": 36, "cont": 6, "max": 20}, {"base": 37, "cont": 6.5, "max": 30}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "盛欣", "id": "sx_9288", "model": "mini_01", "name": "盛欣-佐川(9288普货)", "note": "3天上网", "rates": {"base": 19, "cont": 1.5, "first_weight": 0.1, "max_perimeter": null, "max_thickness": 3, "max_volume": 1800, "max_weight": 2, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
+        {"active": false, "battery": "both", "company": "盛欣", "id": "sx_0105", "model": "shengxin_0105", "name": "盛欣-佐川(可电/液/0105)", "note": "3-4天上网；个人/公司地址计价不同", "rates": {"company_min_per_kg": 20, "first_weight": 0.5, "flat_first": 33, "free_perimeter": 160, "heavy_per_kg": 18, "max_perimeter": 260, "max_volume_when_bubble": 576000, "personal": {"base": 35, "clearance_fee": 55, "cont": 5, "first_weight": 0.5, "max_thickness": 0, "max_volume": 0, "max_weight": 30, "step": 0.5}, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 35, "cont": 0, "max": 0.5}, {"base": 35, "cont": 5, "max": 5}, {"base": 35.5, "cont": 5.5, "max": 10}, {"base": 36, "cont": 6, "max": 20}, {"base": 37, "cont": 6.5, "max": 30}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "中外运", "id": "st_sagawa", "model": "half_bubble_heavy", "name": "中外运-佐川", "note": "4-5天上网", "rates": {"first_weight": 0.5, "flat_first": 33, "free_perimeter": 160, "heavy_per_kg": 15, "max_perimeter": 260, "max_weight": 50, "oversize_quote": true, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 33, "cont": 0, "max": 0.5}, {"base": 33, "cont": 5, "max": 2}, {"base": 34, "cont": 5.5, "max": 5}, {"base": 35, "cont": 6, "max": 20}, {"base": 35, "cont": 6.5, "max": 30}], "volumetric_div": 6000}},
+        {"active": false, "battery": "no", "company": "中外运", "id": "st_kuroneko", "model": "simple_tiers", "name": "中外运-黑猫", "note": "暂不发", "rates": {"first_weight": 0.5, "flat_first": 31, "max_perimeter": 160, "max_weight": 25, "remote": {"其它": 0, "冲绳": 100, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 31, "cont": 0, "max": 0.5}, {"base": 31, "cont": 4, "max": 2}, {"base": 32, "cont": 4.5, "max": 10}, {"base": 34, "cont": 4.5, "max": 25}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "中外运", "id": "st_mini", "model": "mini_01", "name": "中外运-日本邮政mini小包", "note": "2天上网", "rates": {"base": 17, "cont": 1.5, "first_weight": 0.1, "max_perimeter": 60, "max_thickness": 3, "max_weight": 1, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
+        {"active": false, "battery": "yes", "company": "中外运", "id": "st_bat", "model": "half_bubble_heavy", "name": "中外运日本带电专线", "note": "暂时停用", "rates": {"first_weight": 0.5, "flat_first": 32, "free_perimeter": 160, "heavy_per_kg": 14.5, "max_perimeter": 260, "max_weight": 50, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 32, "cont": 0, "max": 0.5}, {"base": 32, "cont": 4.5, "max": 5}, {"base": 33, "cont": 5, "max": 10}, {"base": 34, "cont": 5.5, "max": 20}, {"base": 35, "cont": 6, "max": 30}], "volumetric_div": 6000}},
+        {"active": false, "battery": "no", "company": "华安", "id": "huaan", "model": "half_bubble_tiers", "name": "华安-佐川普货", "note": "已停发", "rates": {"first_weight": 0.5, "flat_first": 31, "free_perimeter": 160, "max_perimeter": 260, "max_weight": 30, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 31, "cont": 0, "max": 0.5}, {"base": 31, "cont": 4, "max": 10}, {"base": 32, "cont": 5, "max": 20}, {"base": 32, "cont": 5.5, "max": 30}], "volumetric_div": 6000}},
+        {"active": false, "battery": "yes", "company": "华安", "id": "huaan_bat", "model": "half_bubble_tiers", "name": "华安-佐川带电", "note": "已停发", "rates": {"first_weight": 0.5, "flat_first": 34, "free_perimeter": 140, "max_perimeter": 260, "max_weight": 30, "remote": {"其它": 0, "冲绳": 150, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 34, "cont": 0, "max": 0.5}, {"base": 34, "cont": 5, "max": 5}, {"base": 34, "cont": 6, "max": 30}], "volumetric_div": 6000}},
+        {"active": false, "battery": "yes", "company": "华安", "id": "huaan_letter", "model": "flat_letter", "name": "华安-投函", "note": "已停发；带电+1元", "rates": {"max_perimeter": 60, "max_thickness": 3, "max_weight": 1, "price": 15.9, "remote": {"type": "none"}, "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "盘古", "id": "pangu", "model": "pangu", "name": "盘古-佐川(电商小包)", "note": "3-4天上网; 超160cm半抛", "rates": {"first_weight": 0.5, "flat_first": 33, "free_perimeter": 160, "max_perimeter": 260, "overlength_160": 30, "overlength_200": 60, "remote": {"hokkaido_over_10": 50, "hokkaido_under_10": 0, "okinawa_under_10": 100, "okinawa_under_20": 200, "quote_perimeter": 200, "quote_side": 200, "type": "pangu"}, "tiers": [{"base": 33, "cont": 0, "max": 0.5}, {"base": 33, "cont": 5, "max": 5}, {"base": 34, "cont": 5.5, "max": 10}, {"base": 35, "cont": 6, "max": 20}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "盘古", "id": "pangu_jp", "model": "pangu_jp", "name": "盘古-日本邮政3CM", "note": "", "rates": {"base_over_1": 25, "base_under_1": 18, "cont": 2, "first_weight": 0.1, "max_perimeter": 60, "max_side": 31, "max_thickness": 3, "max_weight": 2, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "黑猫", "id": "kuroneko_3cm", "model": "mini_01", "name": "黑猫-3CM投函件", "note": "3-4天", "rates": {"base": 18, "cont": 2, "first_weight": 0.1, "max_perimeter": 60, "max_thickness": 3, "max_weight": 1, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
+        {"active": false, "battery": "no", "company": "一番", "id": "yifan", "model": "simple_tiers", "name": "一番", "note": "暂不收160cm以上", "rates": {"first_weight": 0.5, "flat_first": 30, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": 200, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 30, "cont": 0, "max": 0.5}, {"base": 30, "cont": 4, "max": 10}, {"base": 34, "cont": 5, "max": 20}], "volumetric_div": 6000}},
+        {"active": true, "battery": "no", "company": "林道", "id": "lindao", "model": "simple_cont", "name": "林道-佐川", "note": "不收冲绳；不收160cm以上", "rates": {"base": 35, "cont": 5, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": "NA", "北海道": 50, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
+        {"active": true, "battery": "yes", "company": "林道", "id": "lindao_bat", "model": "simple_cont", "name": "林道-佐川（带电）", "note": "4-5天上网", "rates": {"base": 40, "cont": 10, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": "NA", "北海道": 50, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
+        {"active": false, "battery": "no", "company": "顺丰", "id": "sf", "model": "sf", "name": "顺丰", "note": "已停发（全面禁止发送顺丰）", "rates": {"base": 31, "cont": 5, "first_weight": 0.5, "free_perimeter": 0, "max_perimeter": 150, "max_weight": 30, "overlength_fee": 108, "overlength_side": 120, "remote": {"其它": 0, "冲绳": 100, "北海道": 100, "离岛": 0, "type": "sf"}, "volumetric_div": 10000}},
+        {"active": false, "battery": "no", "company": "顺丰", "id": "sf_letter", "model": "letter_01", "name": "顺丰-投函件", "note": "已停发（全面禁止发送顺丰）", "rates": {"base": 15, "cont": 1, "first_weight": 0.1, "max_length": 31.2, "max_perimeter": 56.5, "max_thickness": 2.5, "max_width": 22.8, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}}
+      ]
+    };
+
+    let userConfig = {
+      jpyRatePer100: 4.20,
+      globalMargin: 100, 
+      rakutenAppId: '',
+      channelOverrides: {},
+      customPackages: [
+        { id: 'p1', name: '投函件', l: 30, w: 22, h: 2.5, wgt: 0.1 },
+        { id: 'p2', name: '小纸箱', l: 30, w: 20, h: 10, wgt: 0.2 },
+        { id: 'p3', name: '中箱', l: 45, w: 35, h: 25, wgt: 0.5 },
+        { id: 'p4', name: '大抛货箱', l: 60, w: 50, h: 40, wgt: 1.0 },
+        { id: 'p5', name: '桌垫默认卷', l: 80, w: 13, h: 13, wgt: 1.0 }
+      ]
+    };
+
+    let currentCalculatedResults = [];
+    let currentRadarProducts = [];
+
+    function rmbToJpy(rmb) {
+      if (!userConfig.jpyRatePer100 || userConfig.jpyRatePer100 <= 0) return 0;
+      return Math.round((rmb / (userConfig.jpyRatePer100 / 100)));
+    }
+    
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark-theme');
+      localStorage.setItem('theme_preference', isDark ? 'dark' : 'light');
+      document.getElementById('theme-btn').innerText = isDark ? '☀️' : '🌙';
+    }
+
+    function initTheme() {
+      if (localStorage.getItem('theme_preference') === 'dark') {
+        document.body.classList.add('dark-theme');
+        const btn = document.getElementById('theme-btn');
+        if (btn) btn.innerText = '☀️';
+      }
+    }
+    
+    function exportData() {
+      const data = {
+        DATA_S2: localStorage.getItem('custom_DATA_S2'),
+        userConfig: localStorage.getItem('custom_userConfig'),
+        deskmatInputs: localStorage.getItem('custom_deskmatInputs')
+      };
+      const blob = new Blob([JSON.stringify(data)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `报价系统全量备份_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if(data.DATA_S2) localStorage.setItem('custom_DATA_S2', data.DATA_S2);
+          if(data.userConfig) localStorage.setItem('custom_userConfig', data.userConfig);
+          if(data.deskmatInputs) localStorage.setItem('custom_deskmatInputs', data.deskmatInputs);
+          alert("✅ 备份数据导入成功！页面即将刷新以应用。");
+          location.reload();
+        } catch (error) {
+          alert("❌ 导入失败，文件格式不正确或已损坏！");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function loadSavedData() {
+      try {
+        const savedDataS2 = localStorage.getItem('custom_DATA_S2');
+        if (savedDataS2) {
+          DATA_S2 = JSON.parse(savedDataS2);
+        }
+
+        const ocsNormal = DATA_S2.channels ? DATA_S2.channels.find(c => c.id === 'ocs') : null;
+        if (ocsNormal) {
+          ocsNormal.rates.free_perimeter = 140;
+          ocsNormal.rates.heavy_per_kg = 20;
+          ocsNormal.rates.volumetric_div = 5000;
+          ocsNormal.rates.tiers = [
+            {"base": 31, "cont": 0, "max": 0.5},
+            {"base": 31, "cont": 5, "max": 2},
+            {"base": 31, "cont": 5, "max": 5},
+            {"base": 32, "cont": 5.5, "max": 10},
+            {"base": 33, "cont": 7, "max": 20}
+          ];
+          ocsNormal.note = "140免抛; 141-260全抛; 超260加180元";
+        }
+
+        if (DATA_S2.channels && !DATA_S2.channels.find(c => c.id === 'ocs_bat')) {
+          DATA_S2.channels.unshift({
+            "active": true,
+            "battery": "yes",
+            "company": "OCS",
+            "id": "ocs_bat",
+            "model": "ocs",
+            "name": "OCS带电专线",
+            "note": "带电38/10; 140免抛; 超260加180元",
+            "rates": {
+              "first_weight": 0.5,
+              "free_perimeter": 140,
+              "max_perimeter": 260,
+              "remote": {
+                "hokkaido_min": 15,
+                "hokkaido_per_kg": 12,
+                "hokkaido_threshold": 1.25,
+                "okinawa_min": 30,
+                "okinawa_per_kg": 18,
+                "okinawa_threshold": 1.66,
+                "type": "ocs"
+              },
+              "tiers": [
+                {"base": 38, "cont": 0, "max": 0.5},
+                {"base": 38, "cont": 10, "max": 20}
+              ],
+              "heavy_per_kg": 20,
+              "volumetric_div": 5000
+            }
+          });
+        }
+        localStorage.setItem('custom_DATA_S2', JSON.stringify(DATA_S2));
+
+        const savedUserConfig = localStorage.getItem('custom_userConfig');
+        if (savedUserConfig) {
+          let loadedConf = JSON.parse(savedUserConfig);
+          userConfig.jpyRatePer100 = loadedConf.jpyRatePer100 || 4.20;
+          userConfig.globalMargin = loadedConf.globalMargin || 100;
+          userConfig.rakutenAppId = loadedConf.rakutenAppId || '';
+          userConfig.channelOverrides = loadedConf.channelOverrides || {};
+          if(loadedConf.customPackages && loadedConf.customPackages.length > 0) {
+            userConfig.customPackages = loadedConf.customPackages;
+          }
+
+          if (document.getElementById('cfg-jpy-rate')) {
+            document.getElementById('cfg-jpy-rate').value = userConfig.jpyRatePer100;
+          }
+          if (document.getElementById('cfg-global-margin')) {
+            document.getElementById('cfg-global-margin').value = userConfig.globalMargin;
+          }
+          if (document.getElementById('rakuten-app-id')) {
+            document.getElementById('rakuten-app-id').value = userConfig.rakutenAppId;
+          }
+          if (document.getElementById('fx-status-display')) {
+            document.getElementById('fx-status-display').innerText = `汇率: 100 JPY = ${parseFloat(userConfig.jpyRatePer100).toFixed(2)} RMB`;
+          }
+        }
+
+        const savedDeskmatInputs = localStorage.getItem('custom_deskmatInputs');
+        if (savedDeskmatInputs) {
+          const dmData = JSON.parse(savedDeskmatInputs);
+          for (let key in dmData) {
+            let el = document.getElementById(key);
+            if (el) el.value = dmData[key];
+          }
+        }
+      } catch (e) {
+        console.error("加载本地存储失败", e);
+      }
+    }
+
+    function initDataEditor() {
+      const editor = document.getElementById('json-editor-area');
+      if (editor) {
+        editor.value = JSON.stringify(DATA_S2, null, 2);
+        document.getElementById('json-editor-error').style.display = 'none';
+      }
+    }
+
+    function resetDataEditor() {
+      localStorage.removeItem('custom_DATA_S2');
+      alert("✅ 已清除本地修改的 JSON，下次刷新页面将恢复默认原始数据！");
+      location.reload();
+    }
+
+    function saveDataEditor() {
+      const editor = document.getElementById('json-editor-area');
+      const errorMsg = document.getElementById('json-editor-error');
+      try {
+        const newData = JSON.parse(editor.value);
+        DATA_S2 = newData;
+        localStorage.setItem('custom_DATA_S2', JSON.stringify(DATA_S2));
+        errorMsg.style.display = 'none';
+        alert("✅ 底层数据解析并更新成功！");
+        
+        renderConfigTable();
+        renderTariffTable();
+        calculate();
+        calcDeskMat();
+      } catch (e) {
+        errorMsg.innerText = "❌ JSON 格式错误: " + e.message;
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function saveAllDeskMatConfig() {
+      const dmInputs = [
+        'dm-len', 'dm-wid', 'dm-pack-l', 'dm-pack-w', 'dm-pack-h',
+        'dm-dest', 'dm-addr', 'dm-rate', 'dm-wages', 'dm-comm', 'dm-ads', 'dm-margin',
+        'dm-c-10', 'dm-c-15', 'dm-c-20', 'dm-c-30', 'dm-c-50',
+        'dm-w-10', 'dm-w-15', 'dm-w-20', 'dm-w-30', 'dm-w-50',
+        'dm-tax', 'dm-fixed-cost', 'dm-fixed-w'
+      ];
+      let dataToSave = {};
+      dmInputs.forEach(id => {
+        let el = document.getElementById(id);
+        if(el) dataToSave[id] = el.value;
+      });
+      localStorage.setItem('custom_deskmatInputs', JSON.stringify(dataToSave));
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      const btn = Array.from(document.querySelectorAll('.nav-tab-item')).find(b => b.getAttribute('onclick').includes(tabId));
+      if(btn) btn.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+
+      if(tabId === 'batch') renderBatchTable();
+      if(tabId === 'config') { renderConfigTable(); renderPackageLibrary(); }
+      if(tabId === 'tariff') renderTariffTable();
+      if(tabId === 'data') initDataEditor();
+      if(tabId === 'deskmat') calcDeskMat(); 
+      if(tabId === 'radar' && currentRadarProducts.length === 0) fetchRakutenRanking();
+    }
+
+    // ★★★ 乐天榜单黑马雷达逻辑实现 ★★★
+    function toggleRadarApiConfig() {
+      const box = document.getElementById('radar-api-box');
+      box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+    }
+
+    function saveRadarApiKey() {
+      const val = document.getElementById('rakuten-app-id').value.trim();
+      userConfig.rakutenAppId = val;
+      localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
+      alert("✅ Rakuten Application ID 保存成功！");
+      fetchRakutenRanking();
+    }
+
+    // 默认内置的乐天高权重爆品/黑马商品库（用于离线演示与智能雷达分析）
+    const MOCK_RADAR_ITEMS = [
+      {
+        rank: 1,
+        title: "【楽天1位 圧倒的高評価】 デスクマット 超大型 80×40cm PUレザー リバーシブル 傷防止 防水 滑り止め 学習机 パソコンマット",
+        price: 2480,
+        reviewCount: 38, // 评论少，排名第1，典型黑马！
+        reviewAverage: 4.82,
+        shopName: "スマートライフ楽天市場店",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      },
+      {
+        rank: 2,
+        title: "【クーポン利用で20%OFF】 デスクマット 透明 90×60cm 厚み1.5mm 耐熱 防水 PVC クリアマット 学習机 テレワーク",
+        price: 3280,
+        reviewCount: 1840, // 头部成熟老品
+        reviewAverage: 4.45,
+        shopName: "ホームインテリア専門館",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      },
+      {
+        rank: 3,
+        title: "【新登場★即納】 フェルト デスクマット 大型 90×40cm 北欧風 防寒 おしゃれ キーボードパッド マウスパッド グレー",
+        price: 1980,
+        reviewCount: 12, // 爆发黑马
+        reviewAverage: 4.90,
+        shopName: "北欧モダン雑貨ショップ",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      },
+      {
+        rank: 4,
+        title: "デスクマット レザー調 70×35cm 両面使用可能 マウス対応 携帯便利 汚れ防止 オフィス 家庭用 8カラー",
+        price: 2180,
+        reviewCount: 42, // 黑马
+        reviewAverage: 4.65,
+        shopName: "Gadget Pro 楽天店",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      },
+      {
+        rank: 5,
+        title: "RGBゲーミングマウスパッド 大型 80×30cm 14発光モード 発光デスクマット 光るマウスパッド 防水",
+        price: 3680,
+        reviewCount: 92, // 新晋起量款
+        reviewAverage: 4.70,
+        shopName: "E-Sports ギアダイレクト",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      },
+      {
+        rank: 6,
+        title: "【低反発リストレスト一体型】 超大型デスクマット エルゴノミクス 疲労軽減 腕置き パソコン作業",
+        price: 3980,
+        reviewCount: 19, // 爆发黑马
+        reviewAverage: 4.88,
+        shopName: "エルゴライフ楽天ストア",
+        url: "https://search.rakuten.co.jp/search/mall/%E3%83%87%E3%82%B9%E3%82%AF%E3%83%9E%E3%83%83%E3%83%88/",
+        imageUrl: "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten/cabinet/rakuten_logo.png"
+      }
+    ];
+
+    function fetchRakutenRanking() {
+      const genreId = document.getElementById('radar-genre').value;
+      const appId = userConfig.rakutenAppId || document.getElementById('rakuten-app-id').value.trim();
+      const statusText = document.getElementById('radar-status-text');
+
+      statusText.innerText = "雷达扫描抓取中...";
+      statusText.style.color = "var(--warning)";
+
+      if (!appId) {
+        // 无 API Key 时，启用内置智能雷达算法库
+        setTimeout(() => {
+          currentRadarProducts = [...MOCK_RADAR_ITEMS];
+          statusText.innerText = "扫描完成 (智能演示模式)";
+          statusText.style.color = "var(--success)";
+          applyRadarFilter();
+        }, 300);
+        return;
+      }
+
+      // 直连乐天官方 Ranking API (采用 JSONP 避免跨域限制)
+      const callbackName = 'rakutenRankCallback_' + Date.now();
+      const apiUrl = `https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?applicationId=${encodeURIComponent(appId)}&genreId=${encodeURIComponent(genreId)}&format=json&formatVersion=2&callback=${callbackName}`;
+
+      window[callbackName] = function(data) {
+        delete window[callbackName];
+        if (data.Items && data.Items.length > 0) {
+          currentRadarProducts = data.Items.map((item, idx) => ({
+            rank: item.rank || (idx + 1),
+            title: item.itemName,
+            price: item.itemPrice,
+            reviewCount: item.reviewCount || 0,
+            reviewAverage: item.reviewAverage || 0,
+            shopName: item.shopName,
+            url: item.itemUrl,
+            imageUrl: item.mediumImageUrls && item.mediumImageUrls.length > 0 ? item.mediumImageUrls[0] : ''
+          }));
+          statusText.innerText = `实时 API 扫描成功 (${currentRadarProducts.length} 款商品)`;
+          statusText.style.color = "var(--success)";
+        } else {
+          currentRadarProducts = [...MOCK_RADAR_ITEMS];
+          statusText.innerText = "API 无结果，已展示雷达样本";
+          statusText.style.color = "var(--warning)";
+        }
+        applyRadarFilter();
+      };
+
+      const script = document.createElement('script');
+      script.src = apiUrl;
+      script.onerror = function() {
+        alert("⚠️ 乐天 API 密钥无效或请求受限，已自动切换为雷达内置商品流。");
+        currentRadarProducts = [...MOCK_RADAR_ITEMS];
+        statusText.innerText = "已启用雷达模式";
+        statusText.style.color = "var(--success)";
+        applyRadarFilter();
+      };
+      document.body.appendChild(script);
+    }
+
+    function applyRadarFilter() {
+      const filterType = document.getElementById('radar-filter-type').value;
+      const kw = document.getElementById('radar-keyword').value.trim().toLowerCase();
+      const container = document.getElementById('radar-container');
+
+      let list = [...currentRadarProducts];
+
+      if (filterType === 'dark_horse') {
+        // 黑马条件：排名靠前 (Top 30) 但评论数 <= 50
+        list = list.filter(item => item.reviewCount <= 50);
+      } else if (filterType === 'low_reviews') {
+        list = list.filter(item => item.reviewCount <= 100);
+      } else if (filterType === 'high_rated') {
+        list = list.filter(item => item.reviewAverage >= 4.5);
+      }
+
+      if (kw) {
+        list = list.filter(item => item.title.toLowerCase().includes(kw) || item.shopName.toLowerCase().includes(kw));
+      }
+
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="card-panel" style="grid-column: 1/-1; text-align:center; color:var(--text-muted);">
+          未找到符合条件的黑马或爆品，请调整筛选条件。
+        </div>`;
+        return;
+      }
+
+      list.forEach(item => {
+        let tagHtml = '';
+        if (item.reviewCount <= 50 && item.rank <= 30) {
+          tagHtml = `<span class="badge-pill pill-amber" style="font-weight:800;">⚡ 爆发黑马 (低评论冲榜)</span>`;
+        } else if (item.reviewCount > 500) {
+          tagHtml = `<span class="badge-pill pill-blue">🔥 头部霸榜爆款</span>`;
+        } else {
+          tagHtml = `<span class="badge-pill pill-green">💎 潜力热卖款</span>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'radar-card';
+        card.innerHTML = `
+          <div>
+            <div class="radar-rank-badge ${item.rank <= 3 ? 'top3' : ''}">TOP ${item.rank}</div>
+            
+            <div style="margin-top:12px; margin-bottom:10px;">${tagHtml}</div>
+            
+            <div style="font-size:13.5px; font-weight:700; color:var(--text-main); line-height:1.45; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;" title="${item.title}">
+              ${item.title}
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;">
+              <div>
+                <span style="font-size:11px; color:var(--text-light); display:block;">乐天标价</span>
+                <strong style="font-size:22px; color:var(--primary);">${item.price.toLocaleString()} 円</strong>
+                <small style="font-size:11px; color:var(--text-muted);"> (≈ ￥${(item.price * (userConfig.jpyRatePer100/100)).toFixed(1)})</small>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; color:var(--text-light); display:block;">评价数据</span>
+                <strong style="font-size:14px; color:${item.reviewCount<=50?'var(--danger)':'var(--text-main)'};">💬 ${item.reviewCount} 条</strong>
+                <span style="font-size:12px; color:#f59e0b; font-weight:700;"> ⭐ ${parseFloat(item.reviewAverage||0).toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div style="font-size:11px; color:var(--text-muted); border-top:1px dashed var(--border-color); padding-top:8px; margin-bottom:14px;">
+              🏪 店铺: <b>${item.shopName}</b>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn-action btn-primary" style="flex:1; justify-content:center; padding:8px; font-size:12px;" onclick="importToCompetitorCalc(${item.price}, '${item.title.replace(/'/g, "\\'")}')">
+              🕵️ 扒其拿货底牌
+            </button>
+            <a href="${item.url}" target="_blank" class="btn-action btn-ghost" style="padding:8px 12px; font-size:12px; text-decoration:none; display:inline-flex; align-items:center;">
+              🔗 乐天
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 将选中的雷达商品一键载入【竞品底牌反向扒除器】
+    function importToCompetitorCalc(price, title) {
+      switchTab('rakuten');
+      document.getElementById('comp-price').value = price;
+      calcCompetitor();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // --- Package Lib & Config ---
+    function renderPackageLibrary() {
+      const listEl = document.getElementById('config-pkg-list');
+      if (!listEl) return;
+      listEl.innerHTML = '';
+      userConfig.customPackages.forEach(pkg => {
+        const btn = document.createElement('div');
+        btn.style.display = 'inline-flex';
+        btn.style.alignItems = 'center';
+        btn.style.background = 'var(--card-subtle)';
+        btn.style.border = '1px solid var(--border-color)';
+        btn.style.borderRadius = '8px';
+        btn.style.padding = '4px 10px';
+        btn.style.fontSize = '12px';
+        btn.innerHTML = `
+          <span style="font-weight:600;margin-right:8px;">${pkg.name} (${pkg.l}x${pkg.w}x${pkg.h}cm, ${pkg.wgt}kg)</span>
+          <span style="color:var(--danger);cursor:pointer;font-weight:800;" onclick="deleteCustomPackage('${pkg.id}')">×</span>
+        `;
+        listEl.appendChild(btn);
+      });
+      renderPackageChips();
+    }
+
+    function addCustomPackage() {
+      let name = document.getElementById('pkg-name').value.trim();
+      let l = parseFloat(document.getElementById('pkg-l').value);
+      let w = parseFloat(document.getElementById('pkg-w').value);
+      let h = parseFloat(document.getElementById('pkg-h').value);
+      let wgt = parseFloat(document.getElementById('pkg-weight').value);
+
+      if(!name || isNaN(l) || isNaN(w) || isNaN(h) || isNaN(wgt)) {
+        alert("请填写完整的包材名称、长、宽、高和净重！");
+        return;
+      }
+      userConfig.customPackages.push({ id: 'pkg_' + Date.now(), name, l, w, h, wgt });
+      localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
+      
+      document.getElementById('pkg-name').value = '';
+      document.getElementById('pkg-l').value = '';
+      document.getElementById('pkg-w').value = '';
+      document.getElementById('pkg-h').value = '';
+      document.getElementById('pkg-weight').value = '';
+      renderPackageLibrary();
+    }
+
+    function deleteCustomPackage(id) {
+      userConfig.customPackages = userConfig.customPackages.filter(p => p.id !== id);
+      localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
+      renderPackageLibrary();
+    }
+
+    function renderPackageChips() {
+      const calcChips = document.getElementById('dynamic-pkg-chips');
+      const dmChips = document.getElementById('dm-pkg-chips');
+      
+      let calcHtml = '';
+      let dmHtml = '';
+
+      userConfig.customPackages.forEach(pkg => {
+        calcHtml += `<button class="chip-btn" onclick="applyPkgToCalc('${pkg.id}')">${pkg.name}</button>`;
+        dmHtml += `<button class="chip-btn" onclick="applyPkgToDm('${pkg.id}')">${pkg.name}</button>`;
+      });
+
+      if(calcChips) calcChips.innerHTML = calcHtml;
+      if(dmChips) dmChips.innerHTML = dmHtml;
+    }
+
+    function applyPkgToCalc(id) {
+      let pkg = userConfig.customPackages.find(p => p.id === id);
+      if(pkg) {
+        document.getElementById('inp-len').value = pkg.l;
+        document.getElementById('inp-wid').value = pkg.w;
+        document.getElementById('inp-hei').value = pkg.h;
+        let currW = parseFloat(document.getElementById('inp-weight').value) || 0;
+        document.getElementById('inp-weight').value = (currW + pkg.wgt).toFixed(2);
+        calculate();
+      }
+    }
+
+    function applyPkgToDm(id) {
+      let pkg = userConfig.customPackages.find(p => p.id === id);
+      if(pkg) {
+        document.getElementById('dm-pack-l').value = pkg.l;
+        document.getElementById('dm-pack-w').value = pkg.w;
+        document.getElementById('dm-pack-h').value = pkg.h;
+        document.getElementById('dm-fixed-w').value = pkg.wgt;
+        calcDeskMat();
+        saveAllDeskMatConfig();
+      }
+    }
+
+    function checkSavingsWarning(L, W, H, actW, targetDivId) {
+      let p = L + W + H;
+      let maxS = Math.max(L, W, H);
+      let volW = (L * W * H) / 6000;
+      let alerts = [];
+
+      let thresholds = [60, 80, 100, 140, 160, 200, 260];
+      for (let t of thresholds) {
+          if (p > t && p <= t + 3) {
+              alerts.push(`📦 <b>三边和临界警告：</b>当前 ${p.toFixed(1)}cm，若压缩包装 ${(p-t).toFixed(1)}cm (控制在 ${t}cm 内)，即可避开跳段或全抛/附加费计费！`);
+          }
+      }
+      
+      let sideThresholds = [60, 120, 160];
+      for (let t of sideThresholds) {
+          if (maxS > t && maxS <= t + 2) {
+              alerts.push(`📏 <b>单边超长警告：</b>最大边 ${maxS.toFixed(1)}cm，若缩减 ${(maxS-t).toFixed(1)}cm (控制在 ${t}cm 内)，可免除部分渠道超长附加费！`);
+          }
+      }
+
+      if (volW > actW && volW <= actW * 1.25) {
+          alerts.push(`🎈 <b>抛重微超警告：</b>体积重(${volW.toFixed(2)}kg) 略微大于实重(${actW.toFixed(2)}kg)，请压紧包装降至实重计费！`);
+      }
+
+      return alerts;
+    }
+
+    function calcCompetitor() {
+        let price = parseFloat(document.getElementById('comp-price').value) || 0;
+        let weight = parseFloat(document.getElementById('comp-weight').value) || 0;
+        let l = parseFloat(document.getElementById('comp-l').value) || 0;
+        let w = parseFloat(document.getElementById('comp-w').value) || 0;
+        let h = parseFloat(document.getElementById('comp-h').value) || 0;
+        let fee = parseFloat(document.getElementById('comp-fee').value) || 12;
+        let rate = (userConfig.jpyRatePer100 || 4.20) / 100;
+
+        let netIncomeJPY = price * (1 - fee / 100);
+        let netIncomeRMB = netIncomeJPY * rate;
+
+        let bestShippingRMB = Infinity;
+        let bestChannel = "无可用渠道";
+        DATA_S2.channels.forEach(ch => {
+            if (!ch.active) return;
+            let res = calculateChannelCost(ch, weight, l, w, h, '其它', 'company', false);
+            if (res.available && res.totalCost < bestShippingRMB) {
+                bestShippingRMB = res.totalCost;
+                bestChannel = ch.name;
+            }
+        });
+
+        let maxCostRMB = netIncomeRMB - bestShippingRMB;
+
+        let html = "";
+        if (bestShippingRMB === Infinity) {
+            html = `<div style="color:var(--danger);">无法计算：您输入的竞品尺寸和重量没有任何可用直发渠道。</div>`;
+        } else {
+            html = `
+                <div style="margin-bottom:8px;">扣除平台佣金后净收: <strong style="color:var(--primary);">￥${netIncomeRMB.toFixed(2)} (${netIncomeJPY.toFixed(0)} 円)</strong></div>
+                <div style="margin-bottom:8px;">最低直发运费 (${bestChannel}): <strong style="color:var(--warning);">￥${bestShippingRMB.toFixed(2)}</strong></div>
+                <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--border-color); font-size:15px;">
+                    竞品极限硬成本 (拿货+包材): <strong style="color:${maxCostRMB > 0 ? 'var(--success)' : 'var(--danger)'}; font-size:18px;">￥${maxCostRMB.toFixed(2)}</strong>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">
+                    💡 结论：如果他的拿货价+包材费高于 <b>￥${maxCostRMB.toFixed(2)}</b>，那么他这单就是在<b>亏本冲量</b>！
+                </div>
+            `;
+        }
+        document.getElementById('comp-result').innerHTML = html;
+    }
+
+    function calcRSL() {
+        let qty = parseFloat(document.getElementById('rsl-qty').value) || 500;
+        let wgt = parseFloat(document.getElementById('rsl-wgt').value) || 1.5;
+        let l = parseFloat(document.getElementById('rsl-l').value) || 40;
+        let w = parseFloat(document.getElementById('rsl-w').value) || 13;
+        let h = parseFloat(document.getElementById('rsl-h').value) || 13;
+        let seaPrice = parseFloat(document.getElementById('rsl-sea-price').value) || 12; 
+        let tax = parseFloat(document.getElementById('rsl-tax').value) || 3; 
+        let localFeeJPY = parseFloat(document.getElementById('rsl-local-fee').value) || 450; 
+        
+        let rate = (userConfig.jpyRatePer100 || 4.20) / 100;
+
+        let bestDirect = Infinity;
+        DATA_S2.channels.forEach(ch => {
+            if (!ch.active) return;
+            let res = calculateChannelCost(ch, wgt, l, w, h, '其它', 'company', false);
+            if (res.available && res.totalCost < bestDirect) {
+                bestDirect = res.totalCost;
+            }
+        });
+
+        let volW = (l * w * h) / 6000;
+        let chargeWgt = Math.max(wgt, volW);
+        let singleSeaFee = chargeWgt * seaPrice;
+        let localFeeRMB = localFeeJPY * rate;
+        let singleRSLCost = singleSeaFee + tax + localFeeRMB;
+
+        let totalDirect = bestDirect * qty;
+        let totalRSL = singleRSLCost * qty;
+        let diff = totalDirect - totalRSL;
+
+        let html = "";
+        if (bestDirect === Infinity) {
+            html = `<div style="color:var(--danger);">无法计算直发成本：尺寸超限。</div>`;
+        } else {
+            html = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span><b>方案A (直发专线)</b>: 单件 ￥${bestDirect.toFixed(2)}</span>
+                    <span>总运费: <b>￥${totalDirect.toFixed(2)}</b></span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">
+                    <span><b>方案B (海运+RSL)</b>: 单件 ￥${singleRSLCost.toFixed(2)} <small>(海运￥${singleSeaFee.toFixed(1)}+税金￥${tax}+本派￥${localFeeRMB.toFixed(1)})</small></span>
+                    <span>总运费: <b>￥${totalRSL.toFixed(2)}</b></span>
+                </div>
+            `;
+            if (diff > 0) {
+                html += `<div style="color:var(--success); font-weight:800; font-size:15px;">✅ 推荐走【海运+RSL本土仓】！<br>这批货可为您节省：￥${diff.toFixed(2)}</div>`;
+            } else {
+                html += `<div style="color:var(--danger); font-weight:800; font-size:15px;">❌ 没必要发海外仓！<br>目前【国内直发】更便宜，可省：￥${Math.abs(diff).toFixed(2)} (且无压货风险)</div>`;
+            }
+        }
+        document.getElementById('rsl-result').innerHTML = html;
+    }
+
+    function calcRPP() {
+      let price = parseFloat(document.getElementById('rpp-price').value) || 3980;
+      let cvr = parseFloat(document.getElementById('rpp-cvr').value) || 5;
+      let profitRate = parseFloat(document.getElementById('rpp-profit-rate').value) || 20;
+
+      let profitJPY = price * (profitRate / 100);
+      let breakEvenCPC = profitJPY * (cvr / 100);
+      let roas = 100 / profitRate; 
+      
+      let clicks = Math.floor(10000 / breakEvenCPC);
+      let orders = Math.ceil(clicks * (cvr / 100));
+
+      document.getElementById('rpp-max-cpc').innerText = breakEvenCPC.toFixed(1) + ' 円';
+      document.getElementById('rpp-roas').innerText = (roas * 100).toFixed(0) + ' %';
+      document.getElementById('rpp-desc').innerHTML = `💡 若投入 10,000 円广告费：按此 CPC 可获得约 <b>${clicks} 次点击</b>，需转化出 <b>${orders} 单</b> 才能不亏钱。`;
+    }
+
+    function generateSEOTitle() {
+      let core = document.getElementById('seo-core').value || 'デスクマット';
+      let size = document.getElementById('seo-size').value || '80×40cm';
+      let p1 = document.getElementById('seo-p1').value || '防水 撥水';
+      let p2 = document.getElementById('seo-p2').value || 'PUレザー 傷防止';
+      
+      let templates = `【楽天1位！送料無料】 ${core} マウスパッド 大型 ${size} ${p2} ${p1} おしゃれ リバーシブル テーブルマット デスクパット PCマット \n\n【クーポンで20%OFF】 ${size} ${core} ${p1} ${p2} 高品質 学習机 マウスパッド テレワーク 在宅勤務 \n\n【本日限定ポイント5倍】 大型 マウスパッド ${core} ${p2} ${p1} ${size} カラフル デスク シート`;
+      
+      document.getElementById('seo-result').value = templates;
+    }
+
+    function copySEOTitle() {
+      let text = document.getElementById('seo-result');
+      text.select();
+      document.execCommand("copy");
+      alert("✅ 标题文案已复制！");
+    }
+
+    function calcBundle() {
+      let w1 = parseFloat(document.getElementById('bun-w1').value) || 0.5;
+      let l1 = parseFloat(document.getElementById('bun-l1').value) || 40;
+      let w1_w = parseFloat(document.getElementById('bun-w1_w').value) || 10;
+      let h1 = parseFloat(document.getElementById('bun-h1').value) || 10;
+      let p1 = parseFloat(document.getElementById('bun-p1').value) || 2980;
+      let c1 = parseFloat(document.getElementById('bun-c1').value) || 25;
+      
+      let w2 = parseFloat(document.getElementById('bun-w2').value) || 0.9;
+      let l2 = parseFloat(document.getElementById('bun-l2').value) || 40;
+      let w2_w = parseFloat(document.getElementById('bun-w2_w').value) || 15;
+      let h2 = parseFloat(document.getElementById('bun-h2').value) || 10;
+      let off = parseFloat(document.getElementById('bun-discount').value) || 10;
+
+      let rate = userConfig.jpyRatePer100 / 100;
+
+      let bCost1 = Infinity, bCost2 = Infinity;
+      DATA_S2.channels.forEach(ch => {
+         if(!ch.active) return;
+         let r1 = calculateChannelCost(ch, w1, l1, w1_w, h1, '其它', 'company', false);
+         if(r1.available && r1.totalCost < bCost1) bCost1 = r1.totalCost;
+         
+         let r2 = calculateChannelCost(ch, w2, l2, w2_w, h2, '其它', 'company', false);
+         if(r2.available && r2.totalCost < bCost2) bCost2 = r2.totalCost;
+      });
+
+      let str = "";
+      if (bCost1 === Infinity || bCost2 === Infinity) {
+          str = "<span style='color:var(--danger);'>无法测算：单件或双件存在无可用物流渠道的情况。</span>";
+      } else {
+          let rev1 = p1 * 2 * rate; 
+          let cost1 = (c1 + bCost1) * 2;
+          let prof1 = rev1 - cost1;
+          
+          let rev2 = (p1 * 2 * (1 - off/100)) * rate;
+          let cost2 = (c1 * 2) + bCost2;
+          let prof2 = rev2 - cost2;
+          
+          let diff = prof2 - prof1;
+          
+          str += `<div style="display:flex; justify-content:space-between; border-bottom:1px dashed rgba(255,255,255,0.2); padding-bottom:8px; margin-bottom:8px;">
+                    <span><b>方案A:</b> 卖出2个独立单件</span>
+                    <span>物流￥${(bCost1*2).toFixed(1)} | 利润 <b style="color:var(--text-main);">￥${prof1.toFixed(2)}</b></span>
+                  </div>`;
+          str += `<div style="display:flex; justify-content:space-between; border-bottom:1px dashed rgba(255,255,255,0.2); padding-bottom:8px; margin-bottom:8px;">
+                    <span><b>方案B:</b> 拼单打 ${off}% OFF 合包发货</span>
+                    <span>物流￥${bCost2.toFixed(1)} | 利润 <b style="color:var(--text-main);">￥${prof2.toFixed(2)}</b></span>
+                  </div>`;
+                  
+          if (diff > 0) {
+              str += `<div style="font-size:15px; color:var(--success); font-weight:800; margin-top:12px;">✅ 结论：拼单更划算！比卖单件多赚 ￥${diff.toFixed(2)}</div>`;
+          } else {
+              str += `<div style="font-size:15px; color:var(--danger); font-weight:800; margin-top:12px;">❌ 结论：打折太狠了！比分别卖单件亏了 ￥${Math.abs(diff).toFixed(2)}</div>`;
+          }
+      }
+      document.getElementById('bundle-result-area').innerHTML = str;
+    }
+
+    function updatePackDims() {
+      let L = parseFloat(document.getElementById('dm-len').value) || 0;
+      let W = parseFloat(document.getElementById('dm-wid').value) || 0;
+      document.getElementById('dm-pack-l').value = Math.min(L, W);
+      document.getElementById('dm-pack-w').value = 13;
+      document.getElementById('dm-pack-h').value = 13;
+      saveAllDeskMatConfig();
+    }
+
+    function calcDeskMat() {
+      let L = parseFloat(document.getElementById('dm-len').value) || 0;
+      let W = parseFloat(document.getElementById('dm-wid').value) || 0;
+      
+      let packL = parseFloat(document.getElementById('dm-pack-l').value) || 0;
+      let packW = parseFloat(document.getElementById('dm-pack-w').value) || 0;
+      let packH = parseFloat(document.getElementById('dm-pack-h').value) || 0;
+      
+      let dest = document.getElementById('dm-dest').value;
+      let addr = document.getElementById('dm-addr').value;
+      let rate = parseFloat(document.getElementById('dm-rate').value) || 0.042;
+      let wages = parseFloat(document.getElementById('dm-wages').value) || 0;
+      let comm = parseFloat(document.getElementById('dm-comm').value) || 0; 
+      let ads = parseFloat(document.getElementById('dm-ads').value) || 0;
+      let margin = parseFloat(document.getElementById('dm-margin').value) || 0;
+      
+      let taxMultiplier = parseFloat(document.getElementById('dm-tax').value) || 1.0;
+      let fixedCost = parseFloat(document.getElementById('dm-fixed-cost').value) || 0;
+      let fixedWeight = parseFloat(document.getElementById('dm-fixed-w').value) || 0;
+
+      let dynamicConfig = {
+        '1.0': { cost: parseFloat(document.getElementById('dm-c-10').value)||0, weight: parseFloat(document.getElementById('dm-w-10').value)||0 },
+        '1.5': { cost: parseFloat(document.getElementById('dm-c-15').value)||0, weight: parseFloat(document.getElementById('dm-w-15').value)||0 },
+        '2.0': { cost: parseFloat(document.getElementById('dm-c-20').value)||0, weight: parseFloat(document.getElementById('dm-w-20').value)||0 },
+        '3.0': { cost: parseFloat(document.getElementById('dm-c-30').value)||0, weight: parseFloat(document.getElementById('dm-w-30').value)||0 },
+        '5.0': { cost: parseFloat(document.getElementById('dm-c-50').value)||0, weight: parseFloat(document.getElementById('dm-w-50').value)||0 }
+      };
+
+      let area = (L * W) / 10000; 
+      document.getElementById('dm-res-area').innerText = area.toFixed(2);
+
+      let totalDeductionPercent = wages + comm + ads + margin;
+      let costRatio = 1 - (totalDeductionPercent / 100); 
+      
+      let tbody = document.getElementById('dm-multi-tbody');
+      let errorMsg = document.getElementById('dm-error-msg');
+      tbody.innerHTML = ''; 
+
+      if (costRatio <= 0) {
+        errorMsg.style.display = 'block';
+        return;
+      } else {
+        errorMsg.style.display = 'none';
+      }
+
+      let demoWeight = area * dynamicConfig['2.0'].weight + fixedWeight;
+      let allAlerts = checkSavingsWarning(packL, packW, packH, demoWeight, null);
+
+      const thicknesses = ['1.0', '1.5', '2.0', '3.0', '5.0'];
+      
+      thicknesses.forEach(thick => {
+        let spec = dynamicConfig[thick];
+        let matCost = Math.round(area * spec.cost * taxMultiplier + fixedCost); 
+        let weight = area * spec.weight + fixedWeight; 
+
+        let channelCosts = [];
+        DATA_S2.channels.forEach(ch => {
+          if (!ch.active) return;
+          let res = calculateChannelCost(ch, weight, packL, packW, packH, dest, addr, false);
+          if (res.available) {
+            channelCosts.push({
+              company: ch.company,
+              name: ch.name,
+              cost: res.totalCost
+            });
+          }
+        });
+
+        channelCosts.sort((a, b) => a.cost - b.cost);
+        let bestCost = channelCosts.length > 0 ? channelCosts[0].cost : 0;
+
+        let top3Html = '';
+        if (channelCosts.length === 0) {
+          top3Html = '<span style="color:var(--danger);font-size:12px;font-weight:700;">无可用渠道</span>';
+        } else {
+          let top3 = channelCosts.slice(0, 3);
+          top3Html = top3.map((c, i) => {
+            let medal = i === 0 ? '🥇' : (i === 1 ? '🥈' : '🥉');
+            return `<div style="font-size:12px; line-height:1.45; white-space:nowrap;">
+                      ${medal} ${c.company}: <strong style="color:${i===0?'var(--primary)':'var(--text-light)'};">￥${c.cost.toFixed(1)}</strong>
+                    </div>`;
+          }).join('');
+        }
+
+        let finalRMB = (matCost + bestCost) / costRatio;
+        let finalJPY = finalRMB / rate;
+        let standardJPYPrice = Math.ceil(finalJPY); 
+        
+        let realProfitRMB = 0;
+        if (channelCosts.length > 0) {
+            realProfitRMB = finalRMB * (margin / 100);
+            
+            if (standardJPYPrice >= 3980 && (dest === '冲绳' || dest === '北海道') && realProfitRMB < 0) {
+                allAlerts.push(`🚨 <b>3980包邮倒贴预警 (${thick}mm)：</b>日元定价 ${standardJPYPrice}円 触发乐天3980包邮！发往${dest}将倒贴运费，亏损 <b>￥${Math.abs(realProfitRMB).toFixed(2)}</b>。`);
+            }
+        }
+
+        let profitHtml = '-';
+        if (channelCosts.length > 0) {
+           profitHtml = `￥${realProfitRMB.toFixed(2)}`;
+        }
+
+        let tr = document.createElement('tr');
+        tr.style.borderBottom = "1px solid var(--border-color)";
+        tr.innerHTML = `
+          <td style="padding: 14px 4px;"><strong>${thick} mm</strong></td>
+          <td style="padding: 14px 4px;">${weight.toFixed(2)} kg</td>
+          <td style="padding: 14px 4px;">￥${matCost.toFixed(2)}</td>
+          <td style="padding: 10px 4px;">${top3Html}</td>
+          <td style="padding: 14px 4px; font-weight: 800; font-size: 14px;">￥${channelCosts.length > 0 ? finalRMB.toFixed(2) : '-'}</td>
+          <td style="padding: 14px 4px; font-weight: 800; color: var(--warning); font-size: 15px;">${profitHtml}</td>
+          <td style="padding: 14px 4px; font-weight: 800; color: var(--success); font-size: 17px; letter-spacing: -0.5px;">${channelCosts.length > 0 ? standardJPYPrice.toLocaleString() + ' 円' : '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+      
+      const alertBox = document.getElementById('savings-alert-dm');
+      if (allAlerts.length > 0) {
+          alertBox.innerHTML = allAlerts.map(msg => `<p>${msg}</p>`).join('');
+          alertBox.classList.add('active');
+      } else {
+          alertBox.classList.remove('active');
+          alertBox.innerHTML = '';
+      }
+      
+      saveAllDeskMatConfig();
+    }
+
+    function setWeight(val) {
+      document.getElementById('inp-weight').value = val;
+      calculate();
+    }
+
+    function resetInputs() {
+      document.getElementById('inp-weight').value = 1.5;
+      document.getElementById('inp-len').value = 30;
+      document.getElementById('inp-wid').value = 20;
+      document.getElementById('inp-hei').value = 10;
+      document.getElementById('dest-main').checked = true;
+      document.getElementById('bat-no').checked = true;
+      document.getElementById('addr-comp').checked = true;
+      calculate();
+    }
+
+    function getChannelStandardBasePrice(rates) {
+      if (rates.price) return rates.price;
+      if (rates.flat_first) return rates.flat_first;
+      if (rates.base) return rates.base;
+      if (rates.base_under_1) return rates.base_under_1;
+      if (rates.tiers && rates.tiers.length > 0) return rates.tiers[0].base;
+      return 0;
+    }
+
+    function getChannelStandardContPrice(rates) {
+      if (rates.cont !== undefined) return rates.cont;
+      if (rates.personal && rates.personal.cont !== undefined) return rates.personal.cont;
+      if (rates.tiers && rates.tiers.length > 0) {
+        const nonZero = rates.tiers.find(t => t.cont > 0);
+        return nonZero ? nonZero.cont : rates.tiers[0].cont;
+      }
+      return 0;
+    }
+
+    function calculateChannelCost(channel, actualWeight, L, W, H, destination, addressType, isBattery) {
+      const rates = channel.rates;
+      const model = channel.model;
+      const volDiv = rates.volumetric_div || 6000;
+      const volWeight = (L * W * H) / volDiv;
+      const perimeter = L + W + H;
+      const maxSide = Math.max(L, W, H);
+
+      let reasons = [];
+
+      if (!channel.active) reasons.push("渠道已暂停下架");
+      if (isBattery && channel.battery === 'no') reasons.push("该渠道不支持带电/液体产品");
+
+      if (rates.max_weight && actualWeight > rates.max_weight) reasons.push(`实重超限 (${actualWeight}kg > ${rates.max_weight}kg)`);
+      
+      if (rates.max_perimeter && perimeter > rates.max_perimeter) {
+        if (channel.company === 'OCS' || model === 'ocs') {
+          if (perimeter > 300) reasons.push(`三边和超限 (${perimeter}cm > 300cm)`);
+        } else {
+          reasons.push(`三边和超限 (${perimeter}cm > ${rates.max_perimeter}cm)`);
+        }
+      }
+
+      if (rates.max_side && maxSide > rates.max_side) reasons.push(`单边最长超限 (${maxSide}cm > ${rates.max_side}cm)`);
+      if (rates.max_thickness && rates.max_thickness > 0 && H > rates.max_thickness) reasons.push(`厚度超限 (${H}cm > ${rates.max_thickness}cm)`);
+      if (rates.max_length && L > rates.max_length) reasons.push(`长度超限 (${L}cm > ${rates.max_length}cm)`);
+      if (rates.max_width && W > rates.max_width) reasons.push(`宽度超限 (${W}cm > ${rates.max_width}cm)`);
+
+      let chargeWeight = actualWeight;
+      let ruleDesc = "全额计抛 (取实重与体积重最大值)";
+
+      if (model === 'ocs' || channel.company === 'OCS') {
+        const freeP = rates.free_perimeter || 140;
+        if (perimeter <= freeP) {
+          chargeWeight = actualWeight;
+          ruleDesc = `三边和≤${freeP}cm 全免抛按实重`;
+        } else {
+          chargeWeight = Math.max(actualWeight, volWeight);
+          ruleDesc = `三边和>${freeP}cm 全抛计费 (1/5000)`;
+        }
+      } 
+      else if (['half_bubble_tiers', 'half_bubble_heavy', 'shengxin_0105', 'pangu'].includes(model)) {
+        const freeP = rates.free_perimeter || 160;
+        if (perimeter <= freeP) {
+          chargeWeight = actualWeight;
+          ruleDesc = `三边和≤${freeP}cm 全免抛`;
+        } else {
+          chargeWeight = actualWeight + Math.max(0, volWeight - actualWeight) / 2;
+          ruleDesc = `三边和>${freeP}cm 半抛 [(实重+体积重)/2]`;
+        }
+      } else if (model === 'yida_jp') {
+        const freeP = rates.free_perimeter || 100;
+        if (perimeter <= freeP) {
+          chargeWeight = actualWeight;
+          ruleDesc = `三边和≤${freeP}cm 全免抛`;
+        } else {
+          chargeWeight = Math.max(actualWeight, volWeight);
+          ruleDesc = `三边和>${freeP}cm 按体积重与实重取大者`;
+        }
+      }
+
+      const ov = userConfig.channelOverrides[channel.id] || {};
+      let stdCont = getChannelStandardContPrice(rates);
+      let deltaCont = 0;
+
+      if (ov.customCont !== undefined && ov.customCont !== null && ov.customCont !== '') {
+        let parsedCont = parseFloat(ov.customCont);
+        if (!isNaN(parsedCont)) deltaCont = parsedCont - stdCont;
+      }
+
+      const calcCont = (origCont) => Math.max(0, (origCont || 0) + deltaCont);
+
+      let baseCost = 0;
+      let stdBasePrice = getChannelStandardBasePrice(rates);
+
+      if (model === 'flat_letter') {
+        baseCost = (rates.price || 15.9) + (isBattery ? 1.0 : 0);
+      } else if (['mini_01', 'letter_01'].includes(model)) {
+        const step = rates.step || 0.1;
+        const fw = rates.first_weight || 0.1;
+        const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - fw) * 100) / (step * 100)));
+        baseCost = (rates.base || 15) + steps * calcCont(rates.cont || 1);
+      } else if (model === 'letter_05') {
+        const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+        baseCost = (rates.base || 16) + steps * calcCont(rates.cont || 3);
+      } else if (model === 'pangu_jp') {
+        const step = rates.step || 0.1;
+        if (chargeWeight <= 1.0) {
+          const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.1) * 100) / (step * 100)));
+          baseCost = (rates.base_under_1 || 18) + steps * calcCont(rates.cont || 2);
+        } else {
+          const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 1.0) * 100) / (step * 100)));
+          baseCost = (rates.base_over_1 || 25) + steps * calcCont(rates.cont || 2);
+        }
+      } else if (model === 'simple_cont') {
+        const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - (rates.first_weight||0.5)) * 100) / 50));
+        baseCost = (rates.base || 35) + steps * calcCont(rates.cont || 5);
+      } else if (model === 'ocs') {
+        if (chargeWeight <= 20) {
+          let matched = (rates.tiers || []).find(t => chargeWeight <= t.max) || (rates.tiers || [])[(rates.tiers||[]).length - 1];
+          if (matched) {
+            const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+            baseCost = matched.base + steps * calcCont(matched.cont);
+          }
+        } else {
+          baseCost = chargeWeight * (rates.heavy_per_kg || 20);
+        }
+      } else if (['half_bubble_tiers', 'simple_tiers', 'yida_jp', 'pangu'].includes(model)) {
+        let matched = (rates.tiers || []).find(t => chargeWeight <= t.max) || (rates.tiers || [])[(rates.tiers||[]).length - 1];
+        if (matched) {
+          const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+          baseCost = matched.base + steps * calcCont(matched.cont);
+        } else {
+          reasons.push("超过最大阶梯限重");
+        }
+      } else if (model === 'half_bubble_heavy') {
+        if (chargeWeight <= 30) {
+          let matched = (rates.tiers || []).find(t => chargeWeight <= t.max);
+          if (matched) {
+            const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+            baseCost = matched.base + steps * calcCont(matched.cont);
+          }
+        } else {
+          baseCost = chargeWeight * (rates.heavy_per_kg || 15);
+        }
+      } else if (model === 'shengxin_0105') {
+        if (addressType === 'personal') {
+          const p = rates.personal || {};
+          const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+          baseCost = (p.base || 35) + steps * calcCont(p.cont || 5) + (p.clearance_fee || 55);
+        } else {
+          if (chargeWeight <= 30) {
+            let matched = (rates.tiers || []).find(t => chargeWeight <= t.max);
+            if (matched) {
+              const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+              baseCost = matched.base + steps * calcCont(matched.cont);
+            }
+          } else {
+            baseCost = chargeWeight * (rates.heavy_per_kg || 18);
+          }
+        }
+      } else if (model === 'sf') {
+        const steps = Math.max(0, Math.ceil(Math.round((chargeWeight - 0.5) * 100) / 50));
+        baseCost = (rates.base || 31) + steps * calcCont(rates.cont || 5);
+      }
+
+      if (ov.customBase !== undefined && ov.customBase !== null && ov.customBase !== '') {
+        let delta = parseFloat(ov.customBase) - stdBasePrice;
+        if (!isNaN(delta)) baseCost += delta;
+      }
+
+      let surcharge = 0;
+      if (model === 'pangu') {
+        if (maxSide > 200 || perimeter > 200) reasons.push("三边和或单边超200cm需单询");
+        else if (maxSide > 160) surcharge += (rates.overlength_160 || 30);
+      }
+      if (model === 'sf' && maxSide > (rates.overlength_side || 120)) {
+        surcharge += (rates.overlength_fee || 108);
+      }
+      
+      if ((channel.company === 'OCS' || model === 'ocs') && perimeter > 260) {
+        surcharge += 180;
+      }
+
+      let remoteFee = 0;
+      const remoteInfo = rates.remote || {};
+      const rType = remoteInfo.type || (remoteInfo['冲绳'] !== undefined ? 'fixed' : 'none');
+
+      if (['冲绳', '北海道', '离岛'].includes(destination)) {
+        if (rType === 'fixed' || (remoteInfo[destination] !== undefined && rType !== 'ocs' && rType !== 'pangu' && rType !== 'sf')) {
+          const fee = remoteInfo[destination];
+          if (fee === 'NA' || fee === 'na' || fee === 'N/A' || fee === null) {
+            reasons.push(`该渠道不承运【${destination}】偏远地区`);
+          } else {
+            remoteFee = parseFloat(fee || 0);
+          }
+        } else if (rType === 'ocs') {
+          if (destination === '冲绳') {
+            remoteFee = (chargeWeight <= (remoteInfo.okinawa_threshold||1.66)) ? (remoteInfo.okinawa_min||30) : chargeWeight * (remoteInfo.okinawa_per_kg||18);
+          } else if (destination === '北海道') {
+            remoteFee = (chargeWeight <= (remoteInfo.hokkaido_threshold||1.25)) ? (remoteInfo.hokkaido_min||15) : chargeWeight * (remoteInfo.hokkaido_per_kg||12);
+          }
+        } else if (rType === 'pangu') {
+          if (destination === '冲绳') {
+            if (chargeWeight <= 10) remoteFee = remoteInfo.okinawa_under_10 || 100;
+            else if (chargeWeight <= 20) remoteFee = remoteInfo.okinawa_under_20 || 200;
+            else reasons.push("冲绳超20kg需人工询价");
+          } else if (destination === '北海道') {
+            remoteFee = (chargeWeight <= 10) ? (remoteInfo.hokkaido_under_10 || 0) : (remoteInfo.hokkaido_over_10 || 50);
+          }
+        } else if (rType === 'sf') {
+          remoteFee = parseFloat(remoteInfo[destination] || 0);
+        }
+      }
+
+      let rawTotal = baseCost + surcharge + remoteFee;
+      let chanOffset = parseFloat(ov.offset) || 0;
+      let chanMult = (parseFloat(ov.mult) || 100) / 100;
+      let globalMult = (parseFloat(userConfig.globalMargin) || 100) / 100;
+
+      let totalCostRMB = (rawTotal + chanOffset) * chanMult * globalMult;
+      let totalCostJPY = rmbToJpy(totalCostRMB);
+
+      return {
+        available: reasons.length === 0,
+        reasons: reasons,
+        chargeWeight: Math.round(chargeWeight * 100) / 100,
+        volWeight: Math.round(volWeight * 100) / 100,
+        baseCost: Math.round(baseCost * 100) / 100,
+        surcharge: Math.round(surcharge * 100) / 100,
+        remoteFee: Math.round(remoteFee * 100) / 100,
+        totalCost: Math.round(totalCostRMB * 100) / 100,
+        totalCostJPY: totalCostJPY,
+        ruleDesc: ruleDesc,
+        volDiv: volDiv
+      };
+    }
+
+    function calculate() {
+      const versionKey = document.getElementById('dataset-version').value;
+      const dataSrc = versionKey === 's1' ? DATA_S1 : DATA_S2;
+
+      const weight = parseFloat(document.getElementById('inp-weight').value) || 0;
+      const L = parseFloat(document.getElementById('inp-len').value) || 0;
+      const W = parseFloat(document.getElementById('inp-wid').value) || 0;
+      const H = parseFloat(document.getElementById('inp-hei').value) || 0;
+
+      const dest = document.querySelector('input[name="dest"]:checked').value;
+      const battery = document.querySelector('input[name="battery"]:checked').value === 'yes';
+      const addr = document.querySelector('input[name="addr"]:checked').value;
+
+      const volW6000 = (L * W * H) / 6000;
+      const perimeter = L + W + H;
+
+      document.getElementById('res-actual-w').innerHTML = `${weight.toFixed(2)} <small>KG</small>`;
+      document.getElementById('res-vol-w').innerHTML = `${volW6000.toFixed(2)} <small>KG</small>`;
+      document.getElementById('res-perim').innerHTML = `${perimeter.toFixed(1)} <small>CM</small>`;
+
+      checkSavingsWarning(L, W, H, weight, 'savings-alert-calc');
+
+      currentCalculatedResults = [];
+
+      dataSrc.channels.forEach(ch => {
+        const calcRes = calculateChannelCost(ch, weight, L, W, H, dest, addr, battery);
+        currentCalculatedResults.push({ channel: ch, calc: calcRes });
+      });
+
+      const validRes = currentCalculatedResults.filter(r => r.calc.available && r.channel.active);
+      if (validRes.length > 0) {
+        validRes.sort((a, b) => a.calc.totalCost - b.calc.totalCost);
+        const best = validRes[0].calc;
+        document.getElementById('res-min-price').innerHTML = `￥${best.totalCost.toFixed(2)} <small>(${best.totalCostJPY} 円)</small>`;
+      } else {
+        document.getElementById('res-min-price').innerText = `无可用渠道`;
+      }
+
+      renderChannels();
+      renderPackageChips();
+    }
+
+    function renderChannels() {
+      const container = document.getElementById('channels-container');
+      const companyFilter = document.getElementById('filter-company').value;
+      const activeFilter = document.getElementById('filter-active').value;
+      const searchKeyword = document.getElementById('filter-search').value.trim().toLowerCase();
+
+      let list = [...currentCalculatedResults];
+
+      if (companyFilter !== 'all') list = list.filter(item => item.channel.company === companyFilter);
+      
+      if (activeFilter === 'active_only') {
+        list = list.filter(item => item.channel.active && item.calc.available);
+      }
+      
+      if (searchKeyword) list = list.filter(item => item.channel.name.toLowerCase().includes(searchKeyword));
+
+      list.sort((a, b) => {
+        if (a.calc.available !== b.calc.available) return a.calc.available ? -1 : 1;
+        return a.calc.totalCost - b.calc.totalCost;
+      });
+
+      const validActiveList = list.filter(i => i.calc.available && i.channel.active);
+      const cheapestId = validActiveList.length > 0 ? validActiveList[0].channel.id : null;
+
+      container.innerHTML = '';
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="card-panel" style="text-align:center;color:var(--text-muted);">所选条件下无匹配或可发货渠道</div>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const ch = item.channel;
+        const calc = item.calc;
+        const isWinner = ch.id === cheapestId;
+
+        const card = document.createElement('div');
+        card.className = `express-card ${isWinner ? 'winner' : ''} ${!calc.available ? 'disabled' : ''}`;
+
+        let pillsHtml = '';
+        if (isWinner) pillsHtml += `<span class="badge-pill pill-green">🏆 最优全网最低价</span>`;
+        if (ch.note) pillsHtml += `<span class="badge-pill pill-blue">⚡ ${ch.note}</span>`;
+        if (calc.ruleDesc.includes('半抛')) pillsHtml += `<span class="badge-pill pill-amber">⚖️ 半抛计费</span>`;
+        if (calc.ruleDesc.includes('全免抛')) pillsHtml += `<span class="badge-pill pill-green">✨ 三边和全免抛</span>`;
+        if (calc.surcharge > 0) pillsHtml += `<span class="badge-pill pill-amber">⚠️ 含超长/附加费 ￥${calc.surcharge}</span>`;
+        if (calc.remoteFee > 0) pillsHtml += `<span class="badge-pill pill-purple">📍 含偏远费 ￥${calc.remoteFee}</span>`;
+
+        card.innerHTML = `
+          <div class="card-top-row">
+            <div>
+              <span class="company-tag">${ch.company}</span>
+              <span class="channel-title" style="margin-left:8px;">${ch.name}</span>
+            </div>
+            <div class="price-container">
+              ${calc.available ? `
+                <div class="price-tag-big ${isWinner ? 'winner-price' : ''}">
+                  ￥${calc.totalCost.toFixed(2)} <small>RMB</small>
+                </div>
+                <div class="price-jpy-tag">折合 ≈ ${calc.totalCostJPY.toLocaleString()} 円 (JPY)</div>
+              ` : `
+                <span style="font-size:16px;color:var(--text-light);font-weight:700;">不可发货</span>
+              `}
+            </div>
+          </div>
+
+          <div style="margin-bottom:10px;">${pillsHtml}</div>
+
+          <div class="details-grid">
+            <div class="details-item"><span>计费重量</span><strong>${calc.chargeWeight.toFixed(2)} kg</strong></div>
+            <div class="details-item"><span>体积重量</span><strong>${calc.volWeight.toFixed(2)} kg</strong></div>
+            <div class="details-item"><span>基础运费</span><strong>￥${calc.baseCost.toFixed(2)}</strong></div>
+            <div class="details-item"><span>附加/偏远费</span><strong>￥${(calc.surcharge + calc.remoteFee).toFixed(2)}</strong></div>
+          </div>
+
+          ${!calc.available ? `<div style="color:var(--danger);font-size:13px;font-weight:700;margin-top:6px;">⚠️ 限制原因：${calc.reasons.join('; ')}</div>` : ''}
+
+          <div class="rule-note-bar">
+            <span>💡 规则: ${calc.ruleDesc}</span>
+            <button class="drawer-toggle" onclick="toggleDrawer('${ch.id}')">展开公式计算明细 ▼</button>
+          </div>
+
+          <div id="drawer-${ch.id}" class="math-drawer">
+            // 计费推导过程：<br>
+            • 包装规格: ${document.getElementById('inp-weight').value}kg | ${document.getElementById('inp-len').value}×${document.getElementById('inp-wid').value}×${document.getElementById('inp-hei').value}cm<br>
+            • 体积重: (${document.getElementById('inp-len').value}×${document.getElementById('inp-wid').value}×${document.getElementById('inp-hei').value}) / ${calc.volDiv} = ${calc.volWeight}kg<br>
+            • 最终计费重: ${calc.chargeWeight}kg (${calc.ruleDesc})<br>
+            • 附加费/偏远费: 附加 ￥${calc.surcharge} | 偏远 ￥${calc.remoteFee}<br>
+            • 计算估算: ￥${calc.totalCost} RMB (换算: ${calc.totalCostJPY} JPY | 当前汇率 100 JPY = ${userConfig.jpyRatePer100} RMB)
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function toggleDrawer(id) {
+      const el = document.getElementById('drawer-' + id);
+      el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function exportCalculationCSV() {
+      let csv = "渠道ID,渠道名称,所属公司,状态,计费重(kg),体积重(kg),基础运费(RMB),偏远/附加费(RMB),总运费(RMB),折合运费(JPY),计费规则说明\n";
+      currentCalculatedResults.forEach(item => {
+        const ch = item.channel;
+        const c = item.calc;
+        csv += `"${ch.id}","${ch.name}","${ch.company}","${ch.active?'正常':'停发'}",${c.chargeWeight},${c.volWeight},${c.baseCost},${c.remoteFee+c.surcharge},${c.available ? c.totalCost : 'N/A'},${c.available ? c.totalCostJPY : 'N/A'},"${c.ruleDesc}"\n`;
+      });
+
+      const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `日本专线物流运费比价表_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    let batchData = [
+      { id: 1, desc: "服装轻抛件", qty: 10, weight: 1.2, l: 30, w: 20, h: 10, dest: "其它" },
+      { id: 2, desc: "大件箱规外箱", qty: 5, weight: 8.5, l: 60, w: 40, h: 30, dest: "其它" }
+    ];
+
+    function renderBatchTable() {
+      const tbody = document.getElementById('batch-tbody');
+      tbody.innerHTML = '';
+      let totalQty = 0, totalCostRMB = 0;
+
+      batchData.forEach((row, idx) => {
+        let bestCost = Infinity, bestName = "无可用渠道", bestJPY = 0;
+        DATA_S2.channels.forEach(ch => {
+          const calc = calculateChannelCost(ch, row.weight, row.l, row.w, row.h, row.dest, 'company', false);
+          if (calc.available && ch.active && calc.totalCost < bestCost) {
+            bestCost = calc.totalCost;
+            bestJPY = calc.totalCostJPY;
+            bestName = `${ch.company}-${ch.name}`;
+          }
+        });
+
+        const subtotal = (bestCost === Infinity) ? 0 : bestCost * row.qty;
+        totalQty += row.qty;
+        if (bestCost !== Infinity) totalCostRMB += subtotal;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td><input type="text" value="${row.desc}" style="width:110px;" onchange="updateBatchRow(${row.id}, 'desc', this.value)"></td>
+          <td><input type="number" value="${row.qty}" min="1" onchange="updateBatchRow(${row.id}, 'qty', parseInt(this.value)||1)"></td>
+          <td><input type="number" value="${row.weight}" step="0.1" onchange="updateBatchRow(${row.id}, 'weight', parseFloat(this.value)||0)"></td>
+          <td><input type="number" value="${row.l}" onchange="updateBatchRow(${row.id}, 'l', parseFloat(this.value)||0)"></td>
+          <td><input type="number" value="${row.w}" onchange="updateBatchRow(${row.id}, 'w', parseFloat(this.value)||0)"></td>
+          <td><input type="number" value="${row.h}" onchange="updateBatchRow(${row.id}, 'h', parseFloat(this.value)||0)"></td>
+          <td>
+            <select class="select-input" onchange="updateBatchRow(${row.id}, 'dest', this.value)">
+              <option value="其它" ${row.dest==='其它'?'selected':''}>本州</option>
+              <option value="北海道" ${row.dest==='北海道'?'selected':''}>北海道</option>
+              <option value="冲绳" ${row.dest==='冲绳'?'selected':''}>冲绳</option>
+            </select>
+          </td>
+          <td><strong style="color:var(--primary);">${bestName}</strong></td>
+          <td>${bestCost === Infinity ? 'N/A' : '￥' + bestCost.toFixed(2) + `<br><small style="color:var(--text-light);">(${bestJPY} 円)</small>`}</td>
+          <td><strong>￥${subtotal.toFixed(2)}</strong></td>
+          <td><button class="btn-action btn-ghost" style="color:var(--danger);" onclick="deleteBatchRow(${row.id})">删除</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('batch-total-qty').innerText = totalQty;
+      document.getElementById('batch-total-cost').innerHTML = `￥${totalCostRMB.toFixed(2)} <small style="color:var(--text-light);">(${rmbToJpy(totalCostRMB).toLocaleString()} 円)</small>`;
+    }
+
+    function updateBatchRow(id, field, val) {
+      const r = batchData.find(i => i.id === id);
+      if (r) { r[field] = val; renderBatchTable(); }
+    }
+
+    function addBatchRow() {
+      batchData.push({ id: Date.now(), desc: "新箱规包裹", qty: 1, weight: 2.0, l: 30, w: 20, h: 15, dest: "其它" });
+      renderBatchTable();
+    }
+
+    function deleteBatchRow(id) {
+      batchData = batchData.filter(i => i.id !== id);
+      renderBatchTable();
+    }
+
+    function applyConfigLive() {
+      userConfig.jpyRatePer100 = parseFloat(document.getElementById('cfg-jpy-rate').value) || 4.20;
+      userConfig.globalMargin = parseFloat(document.getElementById('cfg-global-margin').value) || 100;
+
+      document.getElementById('fx-status-display').innerText = `汇率: 100 JPY = ${userConfig.jpyRatePer100.toFixed(2)} RMB`;
+
+      DATA_S2.channels.forEach(ch => {
+        const customBaseEl = document.getElementById(`cfg-base-${ch.id}`);
+        const customContEl = document.getElementById(`cfg-cont-${ch.id}`);
+        const offsetEl = document.getElementById(`cfg-offset-${ch.id}`);
+        const multEl = document.getElementById(`cfg-mult-${ch.id}`);
+
+        if (customBaseEl && customContEl && offsetEl && multEl) {
+          userConfig.channelOverrides[ch.id] = {
+            customBase: customBaseEl.value !== '' ? parseFloat(customBaseEl.value) : null,
+            customCont: customContEl.value !== '' ? parseFloat(customContEl.value) : null,
+            offset: parseFloat(offsetEl.value) || 0,
+            mult: parseFloat(multEl.value) || 100
+          };
+        }
+      });
+      localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
+
+      calculate();
+    }
+
+    function renderConfigTable() {
+      const tbody = document.getElementById('config-tbody');
+      tbody.innerHTML = '';
+
+      DATA_S2.channels.forEach(ch => {
+        const stdBase = getChannelStandardBasePrice(ch.rates);
+        const stdCont = getChannelStandardContPrice(ch.rates);
+        const ov = userConfig.channelOverrides[ch.id] || {};
+
+        const curBase = ov.customBase !== undefined && ov.customBase !== null ? ov.customBase : '';
+        const curCont = ov.customCont !== undefined && ov.customCont !== null ? ov.customCont : '';
+        const curOffset = ov.offset || 0;
+        const curMult = ov.mult || 100;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${ch.name}</strong></td>
+          <td>${ch.company}</td>
+          <td>￥${stdBase.toFixed(1)}</td>
+          <td>
+            <input type="number" id="cfg-base-${ch.id}" value="${curBase}" placeholder="${stdBase}" step="0.5" oninput="applyConfigLive()">
+          </td>
+          <td>￥${stdCont.toFixed(1)}</td>
+          <td>
+            <input type="number" id="cfg-cont-${ch.id}" value="${curCont}" placeholder="${stdCont}" step="0.5" oninput="applyConfigLive()">
+          </td>
+          <td>
+            <input type="number" id="cfg-offset-${ch.id}" value="${curOffset}" placeholder="0" step="0.5" style="width:70px;" oninput="applyConfigLive()">
+          </td>
+          <td>
+            <input type="number" id="cfg-mult-${ch.id}" value="${curMult}" placeholder="100" step="1" style="width:65px;" oninput="applyConfigLive()"> %
+          </td>
+          <td>${ch.active ? '<span style="color:var(--success);font-weight:700;">正常</span>' : '<span style="color:var(--danger);">已下架</span>'}</td>
+          <td><small style="color:var(--text-muted);">${ch.note || '-'}</small></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveAndApplyConfig() {
+      applyConfigLive();
+      alert("✅ 汇率与首续重成本配置更新成功！");
+    }
+
+    function resetConfigToDefault() {
+      document.getElementById('cfg-jpy-rate').value = "4.20";
+      document.getElementById('cfg-global-margin').value = "100";
+      userConfig.channelOverrides = {};
+      localStorage.removeItem('custom_userConfig');
+      applyConfigLive();
+      renderConfigTable();
+      alert("↺ 已成功恢复为系统默认资费与汇率设置！");
+    }
+
+    function renderTariffTable() {
+      const tbody = document.getElementById('tariff-tbody');
+      tbody.innerHTML = '';
+      DATA_S2.channels.forEach(ch => {
+        const r = ch.rates;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${ch.name}</strong></td>
+          <td>${ch.company}</td>
+          <td>${ch.active ? '<span style="color:var(--success);font-weight:700;">接单中</span>' : '<span style="color:var(--danger);">已暂停</span>'}</td>
+          <td>${ch.battery === 'yes' ? '带电' : (ch.battery==='both'?'带电/液体':'普货')}</td>
+          <td>1/${r.volumetric_div || 6000}</td>
+          <td>首重${r.first_weight||0.5}kg</td>
+          <td><small>${r.tiers ? r.tiers.map(t=>`≤${t.max}kg:首${t.base}续${t.cont}`).join('<br>') : `基价￥${r.base} 续￥${r.cont}`}</small></td>
+          <td><small>${r.max_weight ? '限重'+r.max_weight+'kg ' : ''}${r.free_perimeter ? '免抛≤'+r.free_perimeter+'cm' : ''}</small></td>
+          <td><small>${JSON.stringify(r.remote||{}).replace(/["{}]/g,'')}</small></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.onload = function() {
+      initTheme();
+      loadSavedData();
+      renderPackageLibrary();
+      calcCompetitor();
+      calcRSL();
+      calcRPP(); 
+      generateSEOTitle();
+      calculate();
+      calcDeskMat(); 
+      calcBundle();
+    };
+  </script>
+</body>
+</html>
