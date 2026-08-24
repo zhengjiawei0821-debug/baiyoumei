@@ -1042,18 +1042,7 @@
             <span>🔥 乐天实时排行榜 & 黑马爆品雷达</span>
           </div>
           <div style="display:flex; gap:10px;">
-            <button class="btn-action btn-ghost" onclick="toggleRadarApiConfig()">⚙️ API 密钥配置</button>
-            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">🔄 立即扫描刷新榜单</button>
-          </div>
-        </div>
-
-        <div id="radar-api-box" style="display:block; background:var(--card-subtle); padding:18px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:20px;">
-          <h4 style="font-size:13px; margin-bottom:8px; color:var(--primary);">🔑 乐天开发者 API 凭证配置 (官方 openapi 协议)</h4>
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">已通过本站专用云函数直连乐天服务器（无跨域限制）：</p>
-          <div style="display:grid; grid-template-columns: 1fr 1fr auto; gap:10px; align-items:center;">
-            <input type="text" id="rakuten-app-id" class="form-input" placeholder="アプリケーションID (36fd7fcb-...)" style="font-size:13px; padding:8px 12px;">
-            <input type="text" id="rakuten-access-key" class="form-input" placeholder="アクセスキー (pk_...)" style="font-size:13px; padding:8px 12px;">
-            <button class="btn-action btn-primary" onclick="saveRadarApiKey()" style="white-space:nowrap; height:40px;">保存并测试</button>
+            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">🔄 立即刷新官方实时榜单</button>
           </div>
         </div>
 
@@ -1063,10 +1052,10 @@
               <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">榜单类目:</span>
               <select id="radar-genre" class="select-input" onchange="fetchRakutenRanking()">
                 <option value="0" selected>全乐天综合大榜 (0)</option>
+                <option value="551177">日用品・文具・办公 (551177)</option>
                 <option value="100026">电脑・周边配件 (100026)</option>
-                <option value="100227">日用品・文具・办公 (100227)</option>
                 <option value="100804">家具・收纳・内饰 (100804)</option>
-                <option value="551177">生活日常杂货 (551177)</option>
+                <option value="100227">食品・美食生鲜 (100227)</option>
               </select>
             </div>
 
@@ -1765,8 +1754,6 @@
     let userConfig = {
       jpyRatePer100: 4.20,
       globalMargin: 100, 
-      rakutenAppId: '',
-      rakutenAccessKey: '',
       channelOverrides: {},
       customPackages: [
         { id: 'p1', name: '投函件', l: 30, w: 22, h: 2.5, wgt: 0.1 },
@@ -1846,8 +1833,6 @@
           let loadedConf = JSON.parse(savedUserConfig);
           userConfig.jpyRatePer100 = loadedConf.jpyRatePer100 || 4.20;
           userConfig.globalMargin = loadedConf.globalMargin || 100;
-          userConfig.rakutenAppId = loadedConf.rakutenAppId || '';
-          userConfig.rakutenAccessKey = loadedConf.rakutenAccessKey || '';
           userConfig.channelOverrides = loadedConf.channelOverrides || {};
           if(loadedConf.customPackages && loadedConf.customPackages.length > 0) {
             userConfig.customPackages = loadedConf.customPackages;
@@ -1858,12 +1843,6 @@
           }
           if (document.getElementById('cfg-global-margin')) {
             document.getElementById('cfg-global-margin').value = userConfig.globalMargin;
-          }
-          if (document.getElementById('rakuten-app-id')) {
-            document.getElementById('rakuten-app-id').value = userConfig.rakutenAppId;
-          }
-          if (document.getElementById('rakuten-access-key')) {
-            document.getElementById('rakuten-access-key').value = userConfig.rakutenAccessKey;
           }
           if (document.getElementById('fx-status-display')) {
             document.getElementById('fx-status-display').innerText = `汇率: 100 JPY = ${parseFloat(userConfig.jpyRatePer100).toFixed(2)} RMB`;
@@ -1949,37 +1928,15 @@
       if(tabId === 'radar' && currentRadarProducts.length === 0) fetchRakutenRanking();
     }
 
-    function toggleRadarApiConfig() {
-      const box = document.getElementById('radar-api-box');
-      box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
-    }
-
-    function saveRadarApiKey() {
-      const val = document.getElementById('rakuten-app-id').value.trim();
-      const akey = document.getElementById('rakuten-access-key').value.trim();
-      userConfig.rakutenAppId = val;
-      userConfig.rakutenAccessKey = akey;
-      localStorage.setItem('custom_userConfig', JSON.stringify(userConfig));
-      alert("✅ 乐天 API 凭证已保存，正在发起扫描！");
-      fetchRakutenRanking();
-    }
-
     async function fetchRakutenRanking() {
       let genreId = document.getElementById('radar-genre').value;
-      const appId = userConfig.rakutenAppId || document.getElementById('rakuten-app-id').value.trim();
-      const accessKey = userConfig.rakutenAccessKey || document.getElementById('rakuten-access-key').value.trim();
       const statusText = document.getElementById('radar-status-text');
 
-      statusText.innerText = "雷达扫描中...";
+      statusText.innerText = "正在直连日本乐天前台抓取中...";
       statusText.style.color = "var(--warning)";
 
       try {
-        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&applicationId=${encodeURIComponent(appId)}&accessKey=${encodeURIComponent(accessKey)}&_t=${Date.now()}`);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        
+        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&_t=${Date.now()}`);
         const data = await res.json();
 
         if (data.Items && data.Items.length > 0) {
@@ -1993,16 +1950,16 @@
             url: item.itemUrl || 'https://ranking.rakuten.co.jp/',
             imageUrl: item.mediumImageUrls && item.mediumImageUrls.length > 0 ? item.mediumImageUrls[0] : ''
           }));
-          statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款商品)`;
+          statusText.innerText = `✅ 实时直连前台成功 (${currentRadarProducts.length} 款当前最新商品)`;
           statusText.style.color = "var(--success)";
         } else {
-          statusText.innerText = "展示精选数据";
-          statusText.style.color = "var(--success)";
+          statusText.innerText = "未获取到数据";
+          statusText.style.color = "var(--warning)";
         }
       } catch (err) {
-        console.warn("API fallback triggered:", err);
-        statusText.innerText = `✅ 雷达就绪 (${currentRadarProducts.length} 款爆品)`;
-        statusText.style.color = "var(--success)";
+        console.error("Fetch error:", err);
+        statusText.innerText = "网络异常";
+        statusText.style.color = "var(--danger)";
       }
       applyRadarFilter();
     }
@@ -2065,7 +2022,7 @@
               </div>
               <div style="text-align:right;">
                 <span style="font-size:11px; color:var(--text-light); display:block;">评价数据</span>
-                <strong style="font-size:14px; color:${item.reviewCount<=50?'var(--danger)':'var(--text-main)'};">💬 ${item.reviewCount} 条</strong>
+                <strong style="font-size:14px; color:${item.reviewCount<=50?'var(--danger)':'var(--text-main)'};">💬 ${item.reviewCount.toLocaleString()} 条</strong>
                 <span style="font-size:12px; color:#f59e0b; font-weight:700;"> ⭐ ${parseFloat(item.reviewAverage||0).toFixed(2)}</span>
               </div>
             </div>
