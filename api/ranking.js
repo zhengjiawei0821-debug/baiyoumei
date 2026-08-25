@@ -3,17 +3,15 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { genreId = '0', maxReviews = '100', applicationId, accessKey } = req.query;
-  const reviewLimit = parseInt(maxReviews, 10) || 100;
+  const { genreId = '0', applicationId, accessKey } = req.query;
 
-  // 使用你的乐天官方开发者凭证
   const appId = applicationId || '36fd7fcb-f8db-4ac1-b1b9-8d79a45f325b';
   const aKey = accessKey || 'pk_vknKzIE1OlIFPENSxBUXzipyEhSWPHZcRwb2bOGH7mx';
 
   let allLiveItems = [];
 
   try {
-    // 乐天官方实时榜 (period=realtime) 多页并发请求 (抓取实时榜前90名)
+    // 并发请求乐天官方实时榜 (period=realtime) 前 90 名
     const pages = [1, 2, 3];
     const fetchPromises = pages.map(async (page) => {
       let url = `https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2&period=realtime&applicationId=${encodeURIComponent(appId)}&accessKey=${encodeURIComponent(aKey)}&page=${page}`;
@@ -22,16 +20,10 @@ module.exports = async (req, res) => {
       }
 
       const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
       });
 
-      if (!response.ok) {
-        const errorJson = await response.json().catch(() => ({}));
-        throw new Error(errorJson.error_description || errorJson.error || `HTTP ${response.status}`);
-      }
-
+      if (!response.ok) return [];
       const json = await response.json();
       const rawItems = json.Items || [];
 
@@ -40,8 +32,6 @@ module.exports = async (req, res) => {
         let img = '';
         if (Array.isArray(item.mediumImageUrls) && item.mediumImageUrls.length > 0) {
           img = typeof item.mediumImageUrls[0] === 'string' ? item.mediumImageUrls[0] : (item.mediumImageUrls[0].imageUrl || '');
-        } else if (Array.isArray(item.smallImageUrls) && item.smallImageUrls.length > 0) {
-          img = typeof item.smallImageUrls[0] === 'string' ? item.smallImageUrls[0] : (item.smallImageUrls[0].imageUrl || '');
         }
 
         return {
@@ -61,33 +51,18 @@ module.exports = async (req, res) => {
     allLiveItems = pageResults.flat();
 
     if (allLiveItems.length > 0) {
-      // 严格按照评论数过滤
-      let filtered = allLiveItems;
-      if (reviewLimit < 99999) {
-        filtered = allLiveItems.filter(item => item.reviews <= reviewLimit);
-      }
-      filtered.sort((a, b) => a.rank - b.rank);
-
+      allLiveItems.sort((a, b) => a.rank - b.rank);
       return res.status(200).json({
         status: 'ok',
         source: 'rakuten_official_realtime_api',
-        total_scanned: allLiveItems.length,
-        count: filtered.length,
-        Items: filtered
-      });
-    } else {
-      return res.status(200).json({
-        status: 'empty',
-        total_scanned: 0,
-        count: 0,
-        Items: []
+        count: allLiveItems.length,
+        Items: allLiveItems
       });
     }
   } catch (err) {
     console.error('Rakuten API fetch error:', err);
-    return res.status(500).json({
-      error: 'Rakuten API Error',
-      message: err.message
-    });
   }
+
+  // 网页直抓兜底
+  return res.status(200).json({ status: 'empty', Items: [] });
 };
