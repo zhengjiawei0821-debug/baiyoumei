@@ -1687,7 +1687,7 @@
           "rates": {
             "first_weight": 0.5,
             "free_perimeter": 140,
-            "heavy_per_kg": 260,
+            "max_perimeter": 260,
             "remote": {
               "hokkaido_min": 15,
               "hokkaido_per_kg": 12,
@@ -1746,7 +1746,7 @@
         {"active": true, "battery": "no", "company": "黑猫", "id": "kuroneko_3cm", "model": "mini_01", "name": "黑猫-3CM投函件", "note": "3-4天", "rates": {"base": 18, "cont": 2, "first_weight": 0.1, "max_perimeter": 60, "max_thickness": 3, "max_weight": 1, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}},
         {"active": false, "battery": "no", "company": "一番", "id": "yifan", "model": "simple_tiers", "name": "一番", "note": "暂不收160cm以上", "rates": {"first_weight": 0.5, "flat_first": 30, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": 200, "北海道": 0, "离岛": 0, "type": "fixed"}, "tiers": [{"base": 30, "cont": 0, "max": 0.5}, {"base": 30, "cont": 4, "max": 10}, {"base": 34, "cont": 5, "max": 20}], "volumetric_div": 6000}},
         {"active": true, "battery": "no", "company": "林道", "id": "lindao", "model": "simple_cont", "name": "林道-佐川", "note": "不收冲绳；不收160cm以上", "rates": {"base": 35, "cont": 5, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": "NA", "北海道": 50, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
-        {"active": true, "battery": "yes", "company": "林道", "id": "lindao_bat", "model": "simple_cont", "name": "林道-佐川（带电）", "note": "4-5天上网", "rates": {"base": 40, "cont": 10, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"Other": 0, "冲绳": "NA", "北海道": 50, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
+        {"active": true, "battery": "yes", "company": "林道", "id": "lindao_bat", "model": "simple_cont", "name": "林道-佐川（带电）", "note": "4-5天上网", "rates": {"base": 40, "cont": 10, "first_weight": 0.5, "max_perimeter": 160, "max_weight": 20, "remote": {"其它": 0, "冲绳": "NA", "北海道": 50, "离岛": 0, "type": "fixed"}, "volumetric_div": 6000}},
         {"active": false, "battery": "no", "company": "顺丰", "id": "sf", "model": "sf", "name": "顺丰", "note": "已停发（全面禁止发送顺丰）", "rates": {"base": 31, "cont": 5, "first_weight": 0.5, "free_perimeter": 0, "max_perimeter": 150, "max_weight": 30, "overlength_fee": 108, "overlength_side": 120, "remote": {"其它": 0, "冲绳": 100, "北海道": 100, "离岛": 0, "type": "sf"}, "volumetric_div": 10000}},
         {"active": false, "battery": "no", "company": "顺丰", "id": "sf_letter", "model": "letter_01", "name": "顺丰-投函件", "note": "已停发（全面禁止发送顺丰）", "rates": {"base": 15, "cont": 1, "first_weight": 0.1, "max_length": 31.2, "max_perimeter": 56.5, "max_thickness": 2.5, "max_width": 22.8, "remote": {"type": "none"}, "step": 0.1, "volumetric_div": 6000}}
       ]
@@ -1768,7 +1768,6 @@
     let currentCalculatedResults = [];
     let currentRadarProducts = [];
 
-    // 高保真本地回退库
     const CLIENT_FALLBACK_DATABASE = {
       '0': [
         { rank: 2, title: "【24H限定★P5倍】 シアー トップス 長袖 レディース シースルー ハイネック レイヤード インナー 透け感", price: 990, reviews: 42, score: 4.65, shop: "Dark Angel（ダークエンジェル）", url: "https://ranking.rakuten.co.jp/realtime/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/darkangel/cabinet/top/sheer_top.jpg" },
@@ -1982,7 +1981,7 @@
         console.warn("Backend fetch failed");
       }
 
-      // 如果后端被拦，自动启用前端高保真实时黑马备用库
+      // 如果后端抓取未返回，自动从前端内置高保真库中提取
       if (!loadedItems || loadedItems.length === 0) {
         const rawList = CLIENT_FALLBACK_DATABASE[genreId] || CLIENT_FALLBACK_DATABASE['0'];
         loadedItems = rawList.filter(item => item.reviews <= reviewLimit);
