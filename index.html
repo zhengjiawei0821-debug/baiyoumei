@@ -864,7 +864,7 @@
       </button>
       
       <button class="nav-tab-item" onclick="switchTab('radar')" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #e11d48; border: 1px solid #fecdd3;">
-        <span>🔥 实时黑马雷达 (评论≤50)</span>
+        <span>🔥 实时黑马雷达 (评论≤100)</span>
       </button>
 
       <button class="nav-tab-item" onclick="switchTab('rakuten')" style="background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border: 1px solid #99f6e4;">
@@ -1034,7 +1034,7 @@
       </div>
     </div>
 
-    <!-- TAB: 乐天实时榜黑马雷达 -->
+    <!-- TAB: 乐天实时榜黑马雷达 (评论<=100) -->
     <div id="tab-radar" class="tab-pane">
       <div class="card-panel">
         <div class="card-panel-header">
@@ -1042,7 +1042,7 @@
             <span>🔥 日本乐天 リアルタイム (实时榜) 爆发黑马雷达</span>
           </div>
           <div style="display:flex; gap:10px;">
-            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">⚡ 立即扫描刷新实时黑马</button>
+            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">⚡ 立即扫描实时黑马 (评论≤100)</button>
           </div>
         </div>
 
@@ -1056,15 +1056,17 @@
                 <option value="100026">电脑・周边配件 (100026)</option>
                 <option value="100804">家具・收纳・内饰 (100804)</option>
                 <option value="100227">食品・美食生鲜 (100227)</option>
+                <option value="100371">女性时尚服装 (100371)</option>
               </select>
             </div>
 
             <div>
-              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">黑马评论过滤:</span>
-              <select id="radar-filter-type" class="select-input" onchange="applyRadarFilter()">
-                <option value="dark_horse" selected>⚡ 仅看「爆发黑马」(评论 ≤ 50)</option>
-                <option value="low_reviews">💬 仅看「新晋起量款」(评论 ≤ 100)</option>
-                <option value="all">🌐 显示榜单全部商品</option>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">黑马评论上限:</span>
+              <select id="radar-review-limit" class="select-input" onchange="fetchRakutenRanking()">
+                <option value="100" selected>💬 潜力新晋爆品 (评论 ≤ 100 条)</option>
+                <option value="50">⚡ 极速爆发黑马 (评论 ≤ 50 条)</option>
+                <option value="20">🔥 超新起量爆款 (评论 ≤ 20 条)</option>
+                <option value="99999">🌐 显示实时榜全量商品</option>
               </select>
             </div>
 
@@ -1766,39 +1768,6 @@
     let currentCalculatedResults = [];
     let currentRadarProducts = [];
 
-    // 前端内置高保真乐天实时爆发黑马库 (确保评论<=50条，且永远秒级呈现)
-    const CLIENT_FALLBACK_DATABASE = {
-      '0': [
-        { rank: 2, title: "【24H限定★P5倍】 シアー トップス 長袖 レディース シースルー ハイネック レイヤード インナー 透け感", price: 990, reviews: 42, score: 4.65, shop: "Dark Angel（ダークエンジェル）", url: "https://ranking.rakuten.co.jp/realtime/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/darkangel/cabinet/top/sheer_top.jpg" },
-        { rank: 7, title: "【防災士監修】 非常用簡易トイレ 50回分 15年保存 凝固剤 抗菌 消臭袋 災害用 防災グッズ 防臭袋付", price: 2980, reviews: 38, score: 4.92, shop: "防災プロショップ", url: "https://ranking.rakuten.co.jp/realtime/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/bousaipro/cabinet/toilet50.jpg" },
-        { rank: 14, title: "【2026年最新★冷感】 完全遮光 晴雨兼用 折りたたみ日傘 超軽量 カーボン骨 遮光率100% 紫外線対策", price: 2380, reviews: 18, score: 4.88, shop: "Life Goods 楽天市場店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 19, title: "【新登場★即納】 フェルト デスクマット 大型 90×40cm 北欧風 防寒 おしゃれ キーボードパッド", price: 1980, reviews: 12, score: 4.90, shop: "北欧モダン雑貨ショップ", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 23, title: "【急速充電対応】 モバイルバッテリー 20000mAh 大容量 軽量 小型 3台同時充電 残量表示 PSE認証済", price: 2580, reviews: 26, score: 4.85, shop: "SmartLife 楽天市場店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 28, title: "【SNSで話題】 吊り下げトラベルポーチ 3段 仕分け 大容量 撥水 旅行用 出張 洗面用具入れ", price: 1780, reviews: 9, score: 4.95, shop: "トラベルPro楽天店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" }
-      ],
-      '551177': [
-        { rank: 1, title: "【針なしステープラー】 ハリナックス プレス 5枚とじ 穴をあけずに紙をとじる コクヨ 書類整理 事務用品", price: 1100, reviews: 18, score: 4.85, shop: "文具の森 楽天市場店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 2, title: "【超大型★即納】 デスクマット 80×40cm PUレザー リバーシブル 傷防止 防水 滑り止め 学習机 パソコンマット", price: 2480, reviews: 28, score: 4.82, shop: "スマートライフ楽天市場店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 4, title: "【電動オート】 卓上クリーナー 乾電池式 ミニ掃除機 消しゴムかす 卓上掃除 デスク周り 清掃 文房具", price: 1580, reviews: 15, score: 4.75, shop: "キッズステーショナリー", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 5, title: "ゲルインクボールペン 0.5mm 10色セット 速乾 滑らか ノック式 勉強用 仕事用 学生 文房具", price: 1280, reviews: 45, score: 4.65, shop: "オフィスサプライ館", url: "https://ranking.rakuten.co.jp/realtime/", img: "" }
-      ],
-      '100026': [
-        { rank: 1, title: "【静音設計★楽天1位】 ワイヤレスマウス Bluetooth5.2 無線 充電式 3台同时连接 超薄型 高精度 光学式", price: 1880, reviews: 24, score: 4.85, shop: "テックダイレクト", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 2, title: "【7in1多功能】 USB-C ハブ 4K HDMI输出 PD 100W急速充电 SD/TFカードリーダー USB3.0 MacBook対応", price: 2980, reviews: 19, score: 4.78, shop: "Gadget Store 楽天店", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 4, title: "【无段階高さ调整】 アルミニウム合金 ノートパソコンスタンド 折りたたみ式 冷却 放热 タブレット対応", price: 2480, reviews: 35, score: 4.90, shop: "エルゴオフィス", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 5, title: "メカニカルキーボード テンキーレス 赤軸/青轴 日本語配列 RGBバックライト 有线 Type-C着脱式", price: 4980, reviews: 12, score: 4.88, shop: "ゲーミングデバイス専科", url: "https://ranking.rakuten.co.jp/realtime/", img: "" }
-      ],
-      '100804': [
-        { rank: 1, title: "【折りたたみ顽丈】 蓋付き 収納ボックス 3個セット 前開き キャスター付き 積み重ね 衣类整理 衣装ケース", price: 3980, reviews: 21, score: 4.88, shop: "暮らしのインテリア館", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 3, title: "キャスター付き スリム キッチンワゴン 3段 天板付き スチールラック 隙间収納 整理棚", price: 2980, reviews: 35, score: 4.72, shop: "北欧モダンファニチャー", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 4, title: "【配线スッキリ隠す】 ケーブルボックス 木製 桐製 電源タップ収納 配线隠し コードケース", price: 2480, reviews: 16, score: 4.90, shop: "木工インテリア工房", url: "https://ranking.rakuten.co.jp/realtime/", img: "" }
-      ],
-      '100227': [
-        { rank: 1, title: "【24H限定半額★1kg】 骨取り 無塩さば 切り身 2kg (1kg×2袋) 訳あり 鱼 冷冻 鯖 国産加工", price: 3990, reviews: 48, score: 4.82, shop: "海の幸本舗", url: "https://ranking.rakuten.co.jp/realtime/", img: "" },
-        { rank: 2, title: "【新米予約★即納】 令和7年产・8年产 新潟県産 コシヒカリ 10kg (5kg×2袋) 白米 精米 お米", price: 4580, reviews: 32, score: 4.90, shop: "新潟米直贩センター", url: "https://ranking.rakuten.co.jp/realtime/", img: "" }
-      ]
-    };
-
     function rmbToJpy(rmb) {
       if (!userConfig.jpyRatePer100 || userConfig.jpyRatePer100 <= 0) return 0;
       return Math.round((rmb / (userConfig.jpyRatePer100 / 100)));
@@ -1963,54 +1932,52 @@
     async function fetchRakutenRanking() {
       const genreSelect = document.getElementById('radar-genre');
       const genreId = genreSelect ? genreSelect.value : '0';
+      const limitSelect = document.getElementById('radar-review-limit');
+      const reviewLimit = limitSelect ? parseInt(limitSelect.value, 10) : 100;
       const statusText = document.getElementById('radar-status-text');
 
       if (statusText) {
-        statusText.innerText = "正在扫描当前实时冲榜黑马 (评论≤50)...";
+        statusText.innerText = "正在直连乐天官方获取实时榜单...";
         statusText.style.color = "var(--warning)";
       }
 
-      let loadedItems = [];
-
       try {
-        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&maxReviews=50&_t=${Date.now()}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.Items && data.Items.length > 0) {
-            loadedItems = data.Items;
+        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&maxReviews=${reviewLimit}&_t=${Date.now()}`);
+        const data = await res.json();
+
+        if (data.Items && data.Items.length > 0) {
+          currentRadarProducts = data.Items.map((item, idx) => ({
+            rank: Number(item.rank || (idx + 1)),
+            title: String(item.title || item.itemName || '楽天市場人気商品'),
+            price: Number(item.price || item.itemPrice || 0),
+            reviewCount: Number(item.reviews !== undefined ? item.reviews : (item.reviewCount || 0)),
+            reviewAverage: Number(item.score !== undefined ? item.score : (item.reviewAverage || 4.8)),
+            shopName: String(item.shop || item.shopName || '楽天市場優良店舗'),
+            url: String(item.url || item.itemUrl || 'https://ranking.rakuten.co.jp/realtime/'),
+            imageUrl: String(item.img || item.imageUrl || '')
+          }));
+          if (statusText) {
+            statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款评论≤${reviewLimit} 的黑马)`;
+            statusText.style.color = "var(--success)";
+          }
+        } else {
+          currentRadarProducts = [];
+          if (statusText) {
+            statusText.innerText = "当前实时榜单中暂无评论数符合条件的商品";
+            statusText.style.color = "var(--warning)";
           }
         }
       } catch (err) {
-        console.warn("Backend fetch failed, activating built-in database");
+        console.error("Fetch error:", err);
+        if (statusText) {
+          statusText.innerText = "网络连接异常，请重试";
+          statusText.style.color = "var(--danger)";
+        }
       }
-
-      // 如果后端抓取未返回，自动从前端内置高保真库中提取
-      if (!loadedItems || loadedItems.length === 0) {
-        loadedItems = CLIENT_FALLBACK_DATABASE[genreId] || CLIENT_FALLBACK_DATABASE['0'];
-      }
-
-      currentRadarProducts = loadedItems.map((item, idx) => ({
-        rank: Number(item.rank || (idx + 1)),
-        title: String(item.title || item.itemName || '楽天市場人気商品'),
-        price: Number(item.price || item.itemPrice || 0),
-        reviewCount: Number(item.reviews !== undefined ? item.reviews : (item.reviewCount || 0)),
-        reviewAverage: Number(item.score !== undefined ? item.score : (item.reviewAverage || 4.8)),
-        shopName: String(item.shop || item.shopName || '楽天市場優良店舗'),
-        url: String(item.url || item.itemUrl || 'https://ranking.rakuten.co.jp/realtime/'),
-        imageUrl: String(item.img || item.imageUrl || '')
-      }));
-
-      if (statusText) {
-        statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款当前冲榜黑马)`;
-        statusText.style.color = "var(--success)";
-      }
-
       applyRadarFilter();
     }
 
     function applyRadarFilter() {
-      const filterSelect = document.getElementById('radar-filter-type');
-      const filterType = filterSelect ? filterSelect.value : 'dark_horse';
       const kwInput = document.getElementById('radar-keyword');
       const kw = kwInput ? kwInput.value.trim().toLowerCase() : '';
       const container = document.getElementById('radar-container');
@@ -2018,12 +1985,6 @@
       if (!container) return;
 
       let list = [...currentRadarProducts];
-
-      if (filterType === 'dark_horse') {
-        list = list.filter(item => item.reviewCount <= 50);
-      } else if (filterType === 'low_reviews') {
-        list = list.filter(item => item.reviewCount <= 100);
-      }
 
       if (kw) {
         list = list.filter(item => (item.title || '').toLowerCase().includes(kw) || (item.shopName || '').toLowerCase().includes(kw));
@@ -2033,7 +1994,7 @@
 
       if (list.length === 0) {
         container.innerHTML = `<div class="card-panel" style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:30px;">
-          未找到符合条件的黑马商品，请切换过滤条件或点击右上角刷新。
+          未找到符合条件的黑马商品，请尝试放宽评论上限或点击右上角刷新。
         </div>`;
         return;
       }
