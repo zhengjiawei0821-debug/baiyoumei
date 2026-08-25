@@ -3,61 +3,91 @@ module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { genreId = '0', applicationId, accessKey, maxReviews } = req.query;
-  const reviewLimit = maxReviews ? parseInt(maxReviews, 10) : 50;
+  const { genreId = '0', maxReviews = '100', applicationId, accessKey } = req.query;
+  const reviewLimit = parseInt(maxReviews, 10) || 100;
 
-  // 使用你提供的有效乐天凭证 (或从请求中传入)
+  // 使用你的乐天官方开发者凭证
   const appId = applicationId || '36fd7fcb-f8db-4ac1-b1b9-8d79a45f325b';
   const aKey = accessKey || 'pk_vknKzIE1OlIFPENSxBUXzipyEhSWPHZcRwb2bOGH7mx';
 
-  let allItems = [];
+  let allLiveItems = [];
 
   try {
-    // 乐天官方标准端点：一次可取多页数据
-    const pageList = [1, 2, 3];
-    for (const p of pageList) {
-      let url = `https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2&applicationId=${encodeURIComponent(appId)}&accessKey=${encodeURIComponent(aKey)}&page=${p}`;
+    // 乐天官方实时榜 (period=realtime) 多页并发请求 (抓取实时榜前90名)
+    const pages = [1, 2, 3];
+    const fetchPromises = pages.map(async (page) => {
+      let url = `https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2&period=realtime&applicationId=${encodeURIComponent(appId)}&accessKey=${encodeURIComponent(aKey)}&page=${page}`;
       if (genreId && genreId !== '0') {
         url += `&genreId=${encodeURIComponent(genreId)}`;
       }
 
-      const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      if (r.ok) {
-        const json = await r.json();
-        const rawItems = json.Items || [];
-        rawItems.forEach((it, idx) => {
-          const item = it.Item || it;
-          const reviews = item.reviewCount || 0;
-          let img = '';
-          if (Array.isArray(item.mediumImageUrls) && item.mediumImageUrls.length > 0) {
-            img = typeof item.mediumImageUrls[0] === 'string' ? item.mediumImageUrls[0] : (item.mediumImageUrls[0].imageUrl || '');
-          }
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      });
 
-          allItems.push({
-            rank: item.rank || (allItems.length + 1),
-            title: item.itemName,
-            price: item.itemPrice,
-            url: item.itemUrl || item.affiliateUrl || 'https://ranking.rakuten.co.jp/',
-            shop: item.shopName || '楽天市場店',
-            reviews: reviews,
-            score: item.reviewAverage || 4.8,
-            img: img
-          });
-        });
+      if (!response.ok) {
+        const errorJson = await response.json().catch(() => ({}));
+        throw new Error(errorJson.error_description || errorJson.error || `HTTP ${response.status}`);
       }
-    }
 
-    if (allItems.length > 0) {
-      // 按照评论数进行黑马过滤 (默认评论 <= 50)
-      let filtered = allItems;
+      const json = await response.json();
+      const rawItems = json.Items || [];
+
+      return rawItems.map((raw) => {
+        const item = raw.Item || raw;
+        let img = '';
+        if (Array.isArray(item.mediumImageUrls) && item.mediumImageUrls.length > 0) {
+          img = typeof item.mediumImageUrls[0] === 'string' ? item.mediumImageUrls[0] : (item.mediumImageUrls[0].imageUrl || '');
+        } else if (Array.isArray(item.smallImageUrls) && item.smallImageUrls.length > 0) {
+          img = typeof item.smallImageUrls[0] === 'string' ? item.smallImageUrls[0] : (item.smallImageUrls[0].imageUrl || '');
+        }
+
+        return {
+          rank: Number(item.rank || 0),
+          title: String(item.itemName || ''),
+          price: Number(item.itemPrice || 0),
+          url: String(item.itemUrl || item.affiliateUrl || 'https://ranking.rakuten.co.jp/realtime/'),
+          shop: String(item.shopName || '楽天市場店'),
+          reviews: Number(item.reviewCount || 0),
+          score: Number(item.reviewAverage || 0),
+          img: img
+        };
+      });
+    });
+
+    const pageResults = await Promise.all(fetchPromises);
+    allLiveItems = pageResults.flat();
+
+    if (allLiveItems.length > 0) {
+      // 严格按照评论数过滤
+      let filtered = allLiveItems;
       if (reviewLimit < 99999) {
-        filtered = allItems.filter(item => item.reviews <= reviewLimit);
+        filtered = allLiveItems.filter(item => item.reviews <= reviewLimit);
       }
-      return res.status(200).json({ status: 'ok', source: 'rakuten_official_api', total: allItems.length, count: filtered.length, Items: filtered });
+      filtered.sort((a, b) => a.rank - b.rank);
+
+      return res.status(200).json({
+        status: 'ok',
+        source: 'rakuten_official_realtime_api',
+        total_scanned: allLiveItems.length,
+        count: filtered.length,
+        Items: filtered
+      });
+    } else {
+      return res.status(200).json({
+        status: 'empty',
+        total_scanned: 0,
+        count: 0,
+        Items: []
+      });
     }
   } catch (err) {
-    console.error('API call failed:', err);
+    console.error('Rakuten API fetch error:', err);
+    return res.status(500).json({
+      error: 'Rakuten API Error',
+      message: err.message
+    });
   }
-
-  return res.status(500).json({ error: 'Failed to fetch from Rakuten official API' });
 };
