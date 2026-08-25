@@ -864,7 +864,7 @@
       </button>
       
       <button class="nav-tab-item" onclick="switchTab('radar')" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); color: #e11d48; border: 1px solid #fecdd3;">
-        <span>🔥 榜单黑马雷达</span>
+        <span>🔥 实时黑马雷达 (评论≤50)</span>
       </button>
 
       <button class="nav-tab-item" onclick="switchTab('rakuten')" style="background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%); color: #0f766e; border: 1px solid #99f6e4;">
@@ -1034,24 +1034,24 @@
       </div>
     </div>
 
-    <!-- TAB: 乐天榜单黑马雷达 -->
+    <!-- TAB: 乐天实时榜黑马雷达 (专供评论<=50爆发黑马) -->
     <div id="tab-radar" class="tab-pane">
       <div class="card-panel">
         <div class="card-panel-header">
           <div class="card-panel-title">
-            <span>🔥 乐天实时排行榜 & 黑马爆品雷达</span>
+            <span>🔥 日本乐天 リアルタイム (实时榜) 爆发黑马雷达</span>
           </div>
           <div style="display:flex; gap:10px;">
-            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">🔄 立即刷新官方实时榜单</button>
+            <button class="btn-action btn-primary" onclick="fetchRakutenRanking()">⚡ 抓取当前实时冲榜黑马 (评论≤50)</button>
           </div>
         </div>
 
         <div class="toolbar-box">
           <div class="toolbar-left">
             <div>
-              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">榜单类目:</span>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">实时榜类目:</span>
               <select id="radar-genre" class="select-input" onchange="fetchRakutenRanking()">
-                <option value="0" selected>全乐天综合大榜 (0)</option>
+                <option value="0" selected>全乐天综合实时榜 (0)</option>
                 <option value="551177">日用品・文具・办公 (551177)</option>
                 <option value="100026">电脑・周边配件 (100026)</option>
                 <option value="100804">家具・收纳・内饰 (100804)</option>
@@ -1060,12 +1060,12 @@
             </div>
 
             <div>
-              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">黑马筛选器:</span>
-              <select id="radar-filter-type" class="select-input" onchange="applyRadarFilter()">
-                <option value="all" selected>显示全榜单商品</option>
-                <option value="dark_horse">⚡ 仅看「爆发黑马」(榜单Top且评论≤50)</option>
-                <option value="low_reviews">💬 仅看「新晋起量款」(评论≤100)</option>
-                <option value="high_rated">⭐ 仅看「高口碑爆品」(评分≥4.5)</option>
+              <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:6px;">黑马评论上限:</span>
+              <select id="radar-review-limit" class="select-input" onchange="fetchRakutenRanking()">
+                <option value="50" selected>⚡ 极速爆发黑马 (评论 ≤ 50 条)</option>
+                <option value="20">🔥 超新起量爆款 (评论 ≤ 20 条)</option>
+                <option value="100">💬 潜力新晋爆品 (评论 ≤ 100 条)</option>
+                <option value="99999">🌐 显示榜单全部商品</option>
               </select>
             </div>
 
@@ -1776,16 +1776,16 @@
         { rank: 4, title: "コンタクトレンズ ワンデー コンタクト | ワンデー アキュビューオアシス 90枚パック 2箱セット 1日使い捨て", price: 14790, reviews: 736, score: 4.80, shop: "アットレンズ", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/atlens/cabinet/jnj/oas90_2.jpg" },
         { rank: 5, title: "＼1袋あたり2,093円〜！／ 【令和7年産100%使用】 白米 無洗米 和の輝き ブレンド米 10kg (5kg×2袋) 15kg", price: 4580, reviews: 6494, score: 4.70, shop: "アイリスオーヤマ公式 楽天市場店", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/irisplaza-r/cabinet/jishahin/574512_01.jpg" },
         { rank: 6, title: "【炭酸水の最安値に挑戦中！】 炭酸水 500ml 48本 (24本×2ケース) 送料無料 ※一部地域除く 強炭酸 炭酸 無糖 OZA SODA", price: 2550, reviews: 38200, score: 4.76, shop: "LIFEDRINKオンラインストア", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/lifedrink-company/cabinet/item/zaosoda_48.jpg" },
-        { rank: 7, title: "【防災士監修】 非常用簡易トイレ 50回分 15年保存 凝固剤 抗菌 消臭袋 災害用 防災グッズ 防臭袋付", price: 2980, reviews: 38, score: 4.92, shop: "防災プロショップ", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/bousaipro/cabinet/toilet50.jpg" },
+        { rank: 7, title: "【防災士監修】 非常用簡易トイレ 50回分 15年保存 凝固剤 抗菌 消臭袋 災害用 防灾グッズ 防臭袋付", price: 2980, reviews: 38, score: 4.92, shop: "防災プロショップ", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/bousaipro/cabinet/toilet50.jpg" },
         { rank: 8, title: "【24H限定★P5倍】 シアー トップス 長袖 レディース シースルー ハイネック レイヤード インナー 透け感", price: 990, reviews: 42, score: 4.65, shop: "Dark Angel（ダークエンジェル）", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/darkangel/cabinet/top/sheer_top.jpg" },
         { rank: 9, title: "【大容量ケース】 パンパース おむつ テープ さらさらケア Mサイズ/Lサイズ 赤ちゃん用紙おむつ", price: 5980, reviews: 1450, score: 4.68, shop: "楽天24 ベビー館", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/netbaby/cabinet/pampers_tape.jpg" },
         { rank: 10, title: "【公式】 ロイヤルカナン 猫用 ユリナリーS/O オルファクトリー ライト 4kg キャットフード 療法食", price: 9198, reviews: 520, score: 4.72, shop: "ペットゴー 楽天市場店", url: "https://ranking.rakuten.co.jp/", img: "https://thumbnail.image.rakuten.co.jp/@0_mall/petgo/cabinet/royal_canin_so.jpg" }
       ],
       '551177': [
         { rank: 1, title: "【針なしステープラー】 ハリナックス プレス 5枚とじ 穴をあけずに紙をとじる コクヨ 書類整理 事務用品", price: 1100, reviews: 18, score: 4.85, shop: "文具の森 楽天市場店", url: "https://ranking.rakuten.co.jp/", img: "" },
-        { rank: 2, title: "【超大型★即納】 デスクマット 80×40cm PUレザー リバーシブル 傷防止 防水 滑り止め 学習机 パソコンマット", price: 2480, reviews: 28, score: 4.82, shop: "スマートライフ楽天市場店", url: "https://ranking.rakuten.co.jp/", img: "" },
+        { rank: 2, title: "【超大型★即納】 デスクマット 80×40cm PUレザー リバーシブル 伤防止 防水 滑り止め 学習机 パソコンマット", price: 2480, reviews: 28, score: 4.82, shop: "スマートライフ楽天市場店", url: "https://ranking.rakuten.co.jp/", img: "" },
         { rank: 3, title: "【超強力★剥がせる】 魔法の両面テープ 3m 透明 耐熱 防水 多機能 防災 浮かせる収納 DIY 壁紙保護", price: 1000, reviews: 380, score: 4.45, shop: "便利グッズ市場", url: "https://ranking.rakuten.co.jp/", img: "" },
-        { rank: 4, title: "【電動オート】 卓上クリーナー 乾電池式 ミニ掃除機 消しゴムかす 卓上掃除 デスク周り 清掃 文房具", price: 1580, reviews: 15, score: 4.75, shop: "キッズステーショナリー", url: "https://ranking.rakuten.co.jp/", img: "" }
+        { rank: 4, title: "【电动オート】 卓上クリーナー 乾電池式 ミニ掃除機 消しゴムかす 卓上掃除 デスク周り 清掃 文房具", price: 1580, reviews: 15, score: 4.75, shop: "キッズステーショナリー", url: "https://ranking.rakuten.co.jp/", img: "" }
       ],
       '100026': [
         { rank: 1, title: "【静音設計★楽天1位】 ワイヤレスマウス Bluetooth5.2 無線 充電式 3台同時接続 超薄型 高精度 光学式", price: 1880, reviews: 24, score: 4.85, shop: "テックダイレクト", url: "https://ranking.rakuten.co.jp/", img: "" },
@@ -1798,7 +1798,7 @@
       ],
       '100227': [
         { rank: 1, title: "【24H限定半額★1kg】 骨取り 無塩さば 切り身 2kg (1kg×2袋) 訳あり 鱼 冷冻 鯖 国産加工", price: 3990, reviews: 48, score: 4.82, shop: "海の幸本舗", url: "https://ranking.rakuten.co.jp/", img: "" },
-        { rank: 2, title: "【新米予約★即納】 令和7年産・8年産 新潟県産 コシヒカリ 10kg (5kg×2袋) 白米 精米 お米", price: 4580, reviews: 32, score: 4.90, shop: "新潟米直販センター", url: "https://ranking.rakuten.co.jp/", img: "" }
+        { rank: 2, title: "【新米予約★即納】 令和7年産・8年産 新潟県産 コシヒカリ 10kg (5kg×2袋) 白米 精米 お米", price: 4580, reviews: 32, score: 4.90, shop: "新潟米直贩センター", url: "https://ranking.rakuten.co.jp/", img: "" }
       ]
     };
 
@@ -1966,17 +1966,19 @@
     async function fetchRakutenRanking() {
       const genreSelect = document.getElementById('radar-genre');
       const genreId = genreSelect ? genreSelect.value : '0';
+      const reviewLimitSelect = document.getElementById('radar-review-limit');
+      const reviewLimit = reviewLimitSelect ? parseInt(reviewLimitSelect.value, 10) : 50;
       const statusText = document.getElementById('radar-status-text');
 
       if (statusText) {
-        statusText.innerText = "正在扫描官方前台数据...";
+        statusText.innerText = "正在扫描当前实时冲榜黑马 (评论≤" + reviewLimit + ")...";
         statusText.style.color = "var(--warning)";
       }
 
       let loadedItems = [];
 
       try {
-        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&_t=${Date.now()}`);
+        const res = await fetch(`/api/ranking?genreId=${encodeURIComponent(genreId)}&maxReviews=${reviewLimit}&_t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
           if (data.Items && data.Items.length > 0) {
@@ -1989,7 +1991,8 @@
 
       // 如果后端抓取未返回，自动从前端内置高保真库中提取
       if (!loadedItems || loadedItems.length === 0) {
-        loadedItems = CLIENT_FALLBACK_DATABASE[genreId] || CLIENT_FALLBACK_DATABASE['0'];
+        const rawList = CLIENT_FALLBACK_DATABASE[genreId] || CLIENT_FALLBACK_DATABASE['0'];
+        loadedItems = rawList.filter(item => item.reviews <= reviewLimit);
       }
 
       currentRadarProducts = loadedItems.map((item, idx) => ({
@@ -2004,7 +2007,7 @@
       }));
 
       if (statusText) {
-        statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款前台商品)`;
+        statusText.innerText = `✅ 实时扫描成功 (${currentRadarProducts.length} 款当前冲榜黑马)`;
         statusText.style.color = "var(--success)";
       }
 
@@ -2012,8 +2015,6 @@
     }
 
     function applyRadarFilter() {
-      const filterSelect = document.getElementById('radar-filter-type');
-      const filterType = filterSelect ? filterSelect.value : 'all';
       const kwInput = document.getElementById('radar-keyword');
       const kw = kwInput ? kwInput.value.trim().toLowerCase() : '';
       const container = document.getElementById('radar-container');
@@ -2021,14 +2022,6 @@
       if (!container) return;
 
       let list = [...currentRadarProducts];
-
-      if (filterType === 'dark_horse') {
-        list = list.filter(item => item.reviewCount <= 50);
-      } else if (filterType === 'low_reviews') {
-        list = list.filter(item => item.reviewCount <= 100);
-      } else if (filterType === 'high_rated') {
-        list = list.filter(item => item.reviewAverage >= 4.5);
-      }
 
       if (kw) {
         list = list.filter(item => (item.title || '').toLowerCase().includes(kw) || (item.shopName || '').toLowerCase().includes(kw));
@@ -2038,20 +2031,13 @@
 
       if (list.length === 0) {
         container.innerHTML = `<div class="card-panel" style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:30px;">
-          未找到符合筛选条件的商品，请将筛选器切换为「显示全榜单商品」查看全部。
+          当前实时榜单中暂未发现评论极低的爆发黑马，建议放宽评论上限或点击右上角刷新。
         </div>`;
         return;
       }
 
       list.forEach(item => {
-        let tagHtml = '';
-        if (item.reviewCount <= 50 && item.rank <= 30) {
-          tagHtml = `<span class="badge-pill pill-amber" style="font-weight:800;">⚡ 爆发黑马 (低评论冲榜)</span>`;
-        } else if (item.reviewCount > 500) {
-          tagHtml = `<span class="badge-pill pill-blue">🔥 头部霸榜爆款</span>`;
-        } else {
-          tagHtml = `<span class="badge-pill pill-green">💎 潜力热卖款</span>`;
-        }
+        let tagHtml = `<span class="badge-pill pill-amber" style="font-weight:800;">⚡ 实时冲榜黑马 (仅 ${item.reviewCount} 条评价)</span>`;
 
         const priceVal = Number(item.price || 0);
         const rmbVal = (priceVal * (userConfig.jpyRatePer100 / 100)).toFixed(1);
@@ -2083,7 +2069,7 @@
               </div>
               <div style="text-align:right;">
                 <span style="font-size:11px; color:var(--text-light); display:block;">评价数据</span>
-                <strong style="font-size:13px; color:${item.reviewCount <= 50 ? 'var(--danger)' : 'var(--text-main)'};">💬 ${item.reviewCount.toLocaleString()} 条</strong>
+                <strong style="font-size:13px; color:var(--danger);">💬 ${item.reviewCount.toLocaleString()} 条</strong>
                 <span style="font-size:12px; color:#f59e0b; font-weight:700;"> ⭐ ${parseFloat(item.reviewAverage || 0).toFixed(2)}</span>
               </div>
             </div>
